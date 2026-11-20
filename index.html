@@ -232,10 +232,12 @@ img{-webkit-user-drag:none;user-select:none;-webkit-user-select:none;-webkit-tou
       <span aria-hidden="true">♫</span><span class="radio-etiqueta">Christmas Radio</span>
     </button>
     <div id="radioPanel" role="region" aria-label="Reproductor de Christmas Radio" tabindex="0" hidden>
-      <iframe title="Christmas Radio en Spotify"
-        src="https://open.spotify.com/embed/playlist/37i9dQZF1DX0Yxoavh5qJV?utm_source=generator&amp;theme=0&amp;si=9531eb70af984623"
-        width="100%" height="152" loading="lazy" allowfullscreen
-        allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"></iframe>
+      <div id="radioSpotify">
+        <iframe title="Christmas Radio en Spotify"
+          src="https://open.spotify.com/embed/playlist/37i9dQZF1DX0Yxoavh5qJV?utm_source=generator&amp;theme=0&amp;si=9531eb70af984623"
+          width="100%" height="152" loading="lazy" allowfullscreen
+          allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"></iframe>
+      </div>
     </div>
   </div>
 </main>
@@ -377,6 +379,7 @@ function entrarSala(){
   configurarPanorama();
   pintarSala();
   iniciarContador();
+  iniciarRadio();
 }
 
 function pintarSala(){
@@ -536,19 +539,47 @@ function iniciarContador(){
   setInterval(tic, 1000);
 }
 
+/* ===== Christmas Radio ===== */
+const radioBoton = $("radioBoton");
+const radioPanel = $("radioPanel");
+const radioSpotify = $("radioSpotify");
+let reproductorRadio;
+let intentoRadio = false;
+
+function iniciarRadio(){
+  if(intentoRadio || !reproductorRadio || $("sala").hidden) return;
+  intentoRadio = true;
+  try{
+    reproductorRadio.play();
+  }catch{
+    // El panel sigue disponible para iniciar la música manualmente.
+  }
+}
+
+radioBoton.addEventListener("click", () => {
+  radioPanel.hidden = !radioPanel.hidden;
+  radioBoton.setAttribute("aria-expanded", String(!radioPanel.hidden));
+});
+
+window.onSpotifyIframeApiReady = api => {
+  const iframeOriginal = radioSpotify.querySelector("iframe");
+  api.createController(radioSpotify, {
+    url: iframeOriginal.src,
+    width: "100%",
+    height: 152
+  }, controlador => {
+    controlador.addListener("ready", () => {
+      const iframe = radioPanel.querySelector("iframe");
+      if(iframe) iframe.title = iframeOriginal.title;
+      reproductorRadio = controlador;
+      iniciarRadio();
+    });
+  });
+};
+
 iniciar();
 })();
 </script>
-<script>
-(function(){
-  const boton = document.getElementById("radioBoton");
-  const panel = document.getElementById("radioPanel");
-
-  boton.addEventListener("click", () => {
-    panel.hidden = !panel.hidden;
-    boton.setAttribute("aria-expanded", String(!panel.hidden));
-  });
-})();
-</script>
+<script src="https://open.spotify.com/embed/iframe-api/v1" async></script>
 </body>
 </html>
