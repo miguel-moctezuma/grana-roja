@@ -72,13 +72,17 @@ img{-webkit-user-drag:none;user-select:none;-webkit-user-select:none;-webkit-tou
 #o3{left:23.8%;top:35.5%;width:24%}
 #o3 img{animation:titila 3.2s ease-in-out infinite}
 @keyframes titila{50%{opacity:.6}}
-#o4,#o5,#o6{left:50%;bottom:30%;width:13%}
-#o7{left:76.7%;bottom:35.1%;width:6%;transform-origin:50% 100%}
+#o4,#o5,#o6{left:50%;bottom:34%;width:13%}
+#escena:has(#o6.hay) :is(#o4,#o5){visibility:hidden}
+#o7{left:76.7%;bottom:36.3%;width:6%;transform-origin:50% 100%}
 #o7 img{position:relative;transform-origin:50% 100%;animation:llama 1.7s ease-in-out infinite}
 @keyframes llama{0%,100%{transform:scale(1,1)}35%{transform:scale(.97,1.05)}70%{transform:scale(1.02,.98)}}
 .brillo{position:absolute;left:-110%;right:-110%;top:-45%;bottom:-25%;background:radial-gradient(ellipse at 50% 70%,rgba(255,170,70,.55),rgba(255,120,30,.2) 45%,transparent 70%);animation:brillo 2.6s ease-in-out infinite;pointer-events:none}
 @keyframes brillo{50%{opacity:.7}}
-#o8{left:70.5%;top:44%;width:4.5%;transform-origin:50% 0}
+#o8{left:69.5%;top:45%;width:19%;transform-origin:50% 0;pointer-events:none}
+#o8 img{position:absolute;top:0;width:24%;height:auto}
+#o8 img:first-child{left:0;transform:scaleX(-1)}
+#o8 img:last-child{right:0}
 #o9{left:19%;bottom:29%;width:7%;transform-origin:50% 100%}
 
 /* ---------- Contador ---------- */
@@ -99,31 +103,64 @@ img{-webkit-user-drag:none;user-select:none;-webkit-user-select:none;-webkit-tou
 /* ---------- Regalos (PNG) ---------- */
 
 /* Pila decorativa integrada en el panorama */
-#pila{position:absolute;left:53%;top:67.5%;width:12%;min-height:44px;z-index:7;display:none;filter:drop-shadow(0 9px 7px rgba(20,8,2,.5));transform-origin:center bottom}
+#pila{position:absolute;left:48%;bottom:28%;width:18%;min-height:44px;z-index:7;display:none;filter:drop-shadow(0 9px 7px rgba(20,8,2,.5));transform-origin:center bottom}
 #pila.ver{display:block}
 #pila img{width:100%;height:auto;display:block;pointer-events:none}
 #pila.disponible{animation:respiraPila 2.8s ease-in-out infinite}
 @keyframes respiraPila{50%{filter:drop-shadow(0 0 16px rgba(255,202,96,.85));transform:translateY(-4px)}}
-/* Vista ampliada: separada del desplazamiento horizontal */
-#zoomRegalos{position:fixed;inset:0;z-index:18;display:none;flex-direction:column;align-items:center;background:#321408 url('img/piso-zoom.jpg') center center/cover no-repeat;overscroll-behavior:contain}
+/* Vista ampliada de los regalos */
+#zoomRegalos{
+  position:fixed;inset:0;z-index:18;display:none;flex-direction:column;align-items:center;
+  background:linear-gradient(#170b09dd,#41241db0 58%,#1b1008cc),url('img/piso-zoom.jpg') center/cover #321408;
+  overscroll-behavior:contain;
+}
 #zoomRegalos.ver{display:flex}
-#zoomCabecera{width:min(100%,560px);display:flex;align-items:center;justify-content:space-between;padding:calc(env(safe-area-inset-top) + 12px) 20px 12px;flex:none;background:linear-gradient(#1b0b05c9,transparent)}
-#zoomCabecera h2{font-family:var(--serif);font-size:1.25rem;font-weight:500;text-shadow:0 2px 5px #1b0805}
-#cerrarZoom{width:44px;height:44px;border-radius:50%;background:rgba(28,12,6,.72);font-size:1.7rem;line-height:1}
-#zoomScroll{width:100%;flex:1;min-height:0;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;overscroll-behavior-y:contain;padding:20px 6px calc(env(safe-area-inset-bottom) + 34px)}
-#regalos{position:relative;left:auto;right:auto;bottom:auto;display:flex;flex-direction:column-reverse;align-items:center;gap:0;width:100%;max-width:520px;margin:auto;z-index:auto}
-#regalos.ver{display:flex}
-.filaRegalos{display:flex;justify-content:center;align-items:flex-end;width:100%;gap:clamp(0px,.5vw,5px);margin-top:-3px;position:relative}
-.filaRegalos .regalo{--w:calc(min(100vw,520px) * var(--f) * 1.18);min-width:44px;min-height:52px;z-index:1}
-.filaRegalos .regalo:focus-visible,#pila:focus-visible,#cerrarZoom:focus-visible{outline:3px solid #fff0c5;outline-offset:3px}
-@media(max-width:390px){.filaRegalos .regalo{--w:calc(100vw * var(--f) * 1.05)}}
-.regalo{position:relative;flex:none;
-  --w:calc(var(--ancho-sala) * var(--f));
-  --h:calc(var(--w) / var(--r));
-  width:max(var(--w),44px);height:max(var(--h),44px)}
-.regalo img{position:absolute;left:50%;bottom:0;transform:translateX(-50%);display:block;height:auto;pointer-events:none;filter:drop-shadow(0 .15rem .15rem rgba(0,0,0,.35))}
-.regalo .c{width:var(--w);height:var(--h)}
-.regalo .a{width:calc(var(--w) * var(--k))}
+#zoomCabecera{
+  width:100%;flex:none;display:flex;align-items:center;justify-content:space-between;gap:1rem;
+  padding:calc(env(safe-area-inset-top) + .75rem) max(1rem,env(safe-area-inset-right)) .75rem max(1rem,env(safe-area-inset-left));
+  background:linear-gradient(110deg,#4f2029,#2c1318);border-bottom:1px solid #9a6a42;
+  box-shadow:0 .3rem 1rem #18090970;
+}
+#zoomCabecera h2{font:600 clamp(1.4rem,5vw,2rem)/1.1 var(--serif)}
+#zoomCabecera p{margin-top:.25rem;color:#f3d3a4;font-size:.82rem}
+#cerrarZoom{
+  flex:none;width:44px;height:44px;border-radius:50%;border:1px solid #bd9160;
+  background:#301919;color:#ffe7ba;font-size:1.6rem;line-height:1;
+}
+#zoomScroll{
+  width:100%;flex:1;min-height:0;overflow:auto;overscroll-behavior:contain;
+  padding:1.1rem max(.75rem,env(safe-area-inset-right)) calc(1.5rem + env(safe-area-inset-bottom)) max(.75rem,env(safe-area-inset-left));
+}
+#regalos{
+  --columnas:3;display:grid;grid-template-columns:repeat(var(--columnas),minmax(0,1fr));
+  gap:clamp(.4rem,2.2vw,1rem);width:min(100%,48rem);margin:auto;
+}
+@media(min-width:550px){#regalos{--columnas:4}}
+.regalo{
+  position:relative;display:grid;grid-template-rows:minmax(0,1fr) auto;justify-items:center;
+  align-items:end;gap:.3rem;aspect-ratio:.88;padding:.38rem .2rem .45rem;min-height:104px;
+  background:radial-gradient(ellipse at 50% 82%,#9c633849 0%,transparent 55%),linear-gradient(155deg,#503025,#291711);
+  border:1px solid #ba89586e;border-bottom:4px solid #a66a3e;border-radius:.85rem .85rem .4rem .4rem;
+  box-shadow:inset 0 1px #ffda9a2b,0 .3rem .55rem #180a0780;
+}
+.regalo img{
+  width:min(96%,calc(100% * var(--f) * 8));height:100%;min-height:0;
+  object-fit:contain;object-position:center bottom;pointer-events:none;
+  filter:drop-shadow(0 .24rem .2rem #14080590);
+}
+.regalo img.a{width:min(100%,calc(100% * var(--f) * 8 * var(--k)))}
+.regalo::after{
+  content:attr(data-id);display:grid;place-items:center;min-width:1.55rem;height:1.25rem;
+  padding:0 .3rem;border-radius:.3rem;background:#24170f;color:#ffe5b6;
+  border:1px solid #c1965973;font:600 .76rem var(--serif);
+}
+.regalo:focus-visible,#pila:focus-visible,#cerrarZoom:focus-visible{outline:3px solid #fff0c5;outline-offset:2px}
+#avisoZoom{
+  position:absolute;bottom:calc(env(safe-area-inset-bottom) + .85rem);left:50%;transform:translateX(-50%);z-index:2;
+  width:max-content;max-width:calc(100% - 2rem);padding:.6rem .95rem;border-radius:.6rem;
+  background:var(--crema);color:var(--nogal);font-weight:600;text-align:center;opacity:0;pointer-events:none;
+}
+#avisoZoom.ver{opacity:1}
 .regalo.vibra{animation:vibra .45s}
 @keyframes vibra{20%{transform:translateX(-4px)}40%{transform:translateX(4px)}60%{transform:translateX(-3px)}80%{transform:translateX(3px)}}
 .regalo.deshace{animation:deshace 1.1s ease forwards}
@@ -132,9 +169,10 @@ img{-webkit-user-drag:none;user-select:none;-webkit-user-select:none;-webkit-tou
 /* ---------- Revelación y Polaroid ---------- */
 .velo{position:fixed;inset:0;z-index:30;display:none;align-items:center;justify-content:center;background:rgba(10,5,2,.72)}
 .velo.ver{display:flex}
-#caja{width:min(15rem,70vw);padding:1.6rem 1rem;border-radius:.5rem;background:var(--kraft);text-align:center;position:relative}
-#etiqueta{display:inline-block;padding:.5rem 1rem;background:#fbf4e2;color:var(--dorado);font-family:var(--serif);font-size:1.9rem;border-radius:.2rem;animation:aparece 1s ease both}
-#papelito{position:absolute;right:-.8rem;bottom:-2.2rem;padding:.4rem .7rem;background:#fff;color:var(--nogal);font-size:.85rem;transform:rotate(-5deg);box-shadow:0 .2rem .6rem rgba(0,0,0,.3);animation:aparece 1.6s .8s ease both}
+#veloCaja{padding:1.5rem}
+#caja{animation:aparece .5s ease both}
+#etiqueta{overflow-wrap:anywhere;font:600 clamp(1.65rem,8vw,2.65rem)/1.1 var(--serif)}
+#papelito{margin-top:.7rem;color:#694530;font:italic 1.08rem var(--serif)}
 #polaroid{width:min(17rem,78vw);padding:.8rem .8rem 1rem;background:#fbf8f0;color:#3a2a1a;text-align:center;font-family:var(--serif);transform:rotate(-2deg);box-shadow:0 .5rem 1.6rem rgba(0,0,0,.45)}
 #polaroid .foto{aspect-ratio:1;background:#d9d1c1;overflow:hidden}
 #polaroid img{width:100%;height:100%;object-fit:cover;display:block}
@@ -153,17 +191,21 @@ img{-webkit-user-drag:none;user-select:none;-webkit-user-select:none;-webkit-tou
   background:radial-gradient(ellipse,#081c0e18 25%,#08170bb0),url('img/papel-navidad.jpg') center / cover;
   overflow:auto;
 }
-#etiquetaBienvenida{
+.etiquetaRegalo{
   position:relative;width:min(100%,23rem);margin:auto;
-  padding:2.55rem clamp(.75rem,5vw,1.6rem) .95rem;text-align:center;
-  border:1px solid #d7ad63;border-radius:1.1rem 1.1rem .65rem .65rem;
-  color:var(--vino);background:linear-gradient(145deg,#fff4d9,#eddbb5);
-  box-shadow:0 0 0 4px #602225,0 .65rem 2rem #100b07a8;
+  padding:2.4rem clamp(1rem,5vw,1.7rem) 1.25rem;text-align:center;
+  isolation:isolate;border:1px solid #dbb979;border-radius:1.35rem 1.35rem .65rem .65rem;
+  color:var(--vino);background:radial-gradient(ellipse at 50% 12%,#fff8e7,#efdbb2);
+  box-shadow:0 0 0 3px #68252e,0 .65rem 2rem #100b07a8;
 }
-#etiquetaBienvenida::before{
+.etiquetaRegalo::before{
   content:"";position:absolute;top:-1rem;left:50%;width:1rem;height:2.4rem;
   transform:translateX(-50%) rotate(13deg);border:4px solid #9e202b;border-radius:50%;
   box-shadow:inset 1px 0 #e37967,1px 1px 2px #53221570;
+}
+.etiquetaRegalo::after{
+  content:"";position:absolute;inset:.36rem;z-index:-1;pointer-events:none;
+  border:1px solid #b1834f;border-radius:1rem 1rem .42rem .42rem;
 }
 #bienvenida h1{font:600 clamp(1.8rem,7.5vw,2.75rem)/1.08 var(--serif)}
 #etiquetaBienvenida #acceso{margin:1rem auto 0;width:100%}
@@ -240,7 +282,7 @@ img{-webkit-user-drag:none;user-select:none;-webkit-user-select:none;-webkit-tou
 <body>
 
 <div id="bienvenida">
-  <div id="etiquetaBienvenida">
+  <div id="etiquetaBienvenida" class="etiquetaRegalo">
     <h1>Feliz Navidad,<br>te amo cosi</h1>
     <form id="acceso" onsubmit="return false">
       <input id="codigo" type="password" autocomplete="off" autocapitalize="off" aria-label="Código de acceso" placeholder="Código de acceso">
@@ -265,9 +307,9 @@ img{-webkit-user-drag:none;user-select:none;-webkit-user-select:none;-webkit-tou
     <div class="obj fundir" id="o3" data-n="3" aria-label="Luces cálidas"><img src="img/obj-3-luces.png" alt=""></div>
     <div class="obj fundir" id="o4" data-n="4" aria-label="Pino navideño"><img src="img/obj-4-pino.png" alt=""></div>
     <div class="obj fundir" id="o5" data-n="5" aria-label="Esferas"><img src="img/obj-5-pino-con-esferas.png" alt=""></div>
-    <div class="obj fundir" id="o6" data-n="6" aria-label="Estrella"><img src="img/obj-6-pino-con-estrella.png" alt=""></div>
+    <div class="obj fundir" id="o6" data-n="6" aria-label="Estrella"><img src="img/Festive%20Glowing%20Christmas%20Tree.png" alt=""></div>
     <div class="obj" id="o7" data-n="7" aria-label="Chimenea encendida"><i class="brillo"></i><img src="img/obj-7-fuego.png" alt=""></div>
-    <div class="obj" id="o8" data-n="8" aria-label="Calcetín navideño"><img src="img/obj-8-calcetin.png" alt=""></div>
+    <div class="obj" id="o8" data-n="8" aria-label="Calcetines navideños"><img src="img/calcetin-rojo.png" alt=""><img src="img/calcetin-rojo.png" alt=""></div>
     <div class="obj" id="o9" data-n="9" aria-label="Regalo decorativo"><img src="img/obj-9-regalo-decorativo.png" alt=""></div>
     <button id="radioBoton" type="button" aria-label="Abrir Christmas Radio" aria-haspopup="dialog" aria-controls="radioPanel" aria-expanded="false">
       <span class="radioCarcasa" aria-hidden="true"><span class="radioPantalla">♫</span></span>
@@ -302,10 +344,17 @@ img{-webkit-user-drag:none;user-select:none;-webkit-user-select:none;-webkit-tou
   </div>
 </dialog>
 
-<section id="zoomRegalos" role="dialog" aria-modal="true" aria-label="Tus regalos"><header id="zoomCabecera"><h2>Espero que te gusten, 1 al día chifis</h2><button id="cerrarZoom" type="button" aria-label="Cerrar regalos">×</button></header><div id="zoomScroll"><div id="regalos" aria-label="Regalos"></div></div></section>
+<section id="zoomRegalos" role="dialog" aria-modal="true" aria-labelledby="tituloRegalos">
+  <header id="zoomCabecera">
+    <div><h2 id="tituloRegalos">Tus regalos</h2><p>Uno al día, chifis</p></div>
+    <button id="cerrarZoom" type="button" aria-label="Cerrar regalos">×</button>
+  </header>
+  <div id="zoomScroll"><div id="regalos" aria-label="Regalos"></div></div>
+  <div id="avisoZoom" role="status"></div>
+</section>
 
 <div class="velo" id="veloCaja">
-  <div id="caja"><div id="etiqueta"></div><div id="papelito">Espero tu review :p</div></div>
+  <div id="caja" class="etiquetaRegalo"><div id="etiqueta"></div><div id="papelito">Espero tu review :p</div></div>
 </div>
 <div class="velo" id="veloPolaroid">
   <div id="polaroid"><div class="foto"><img id="polaroidImg" alt=""></div><p id="polaroidFecha"></p></div>
@@ -337,8 +386,8 @@ let ocupado = false;
 
 /* ===== Imágenes: se cargan mientras se ve la bienvenida, para que la sala aparezca completa ===== */
 const COLORES = ["bosque","vino","kraft","marfil"];
-// f = ancho del regalo cerrado (fracción del ancho de la sala), r = proporción ancho/alto de la imagen cerrada
-const FORMAS  = [{n:"alto",f:.09,r:.588},{n:"cubo",f:.112,r:.934},{n:"ancho",f:.138,r:1.573}];
+// f conserva la escala relativa de cada forma de regalo
+const FORMAS  = [{n:"alto",f:.09},{n:"cubo",f:.112},{n:"ancho",f:.138}];
 // k = cuánto más ancha se dibuja la imagen abierta para que la caja mida lo mismo que cerrada
 const ESCALA_ABIERTO = {
   "bosque-alto":1.19,"bosque-ancho":1.068,"bosque-cubo":1.168,
@@ -366,7 +415,7 @@ async function llamar(ruta, extra){
 }
 
 function aviso(texto, ms){
-  const a = $("aviso");
+  const a = $("zoomRegalos").classList.contains("ver") ? $("avisoZoom") : $("aviso");
   a.textContent = texto;
   a.classList.add("ver");
   setTimeout(() => a.classList.remove("ver"), ms || 2600);
@@ -493,36 +542,26 @@ document.addEventListener("keydown",e=>{if(e.key==="Escape" && $("zoomRegalos").
 function pintarRegalos(){
   const cont = $("regalos");
   cont.innerHTML = "";
-  // De abajo hacia arriba: 5, 5, 5, 4, 3, 2 (24 cajas)
-  const filas = [5,5,5,4,3,2];
-  let i = 1;
-  for(const cantidad of filas){
-    const fila = document.createElement("div");
-    fila.className = "filaRegalos";
-    for(let j=0;j<cantidad;j++,i++){
-      const {color,forma} = aspectoRegalo(i);
-      const abierto = !!estado.regalos[i];
-      const b = document.createElement("button");
-      b.type = "button";
-      b.className = "regalo" + (abierto ? " abierto" : "");
-      b.dataset.id = i;
-      b.style.setProperty("--f",forma.f);
-      b.style.setProperty("--r",forma.r);
-      b.style.setProperty("--k",ESCALA_ABIERTO[color+"-"+forma.n]);
-      b.setAttribute("aria-label","Regalo " + i + (abierto ? ", abierto" : ", cerrado"));
-      const img = document.createElement("img");
-      img.alt = "";
-      img.draggable = false;
-      img.decoding = "async";
-      img.className = abierto ? "a" : "c";
-      img.src = "img/regalo-" + (abierto ? "abierto" : "cerrado") + "-" + color + "-" + forma.n + ".png";
-      b.appendChild(img);
-      b.addEventListener("click",()=>tocar(Number(b.dataset.id),b));
-      fila.appendChild(b);
-    }
-    cont.appendChild(fila);
+  for(let i=1;i<=TOTAL;i++){
+    const {color,forma} = aspectoRegalo(i);
+    const abierto = !!estado.regalos[i];
+    const b = document.createElement("button");
+    b.type = "button";
+    b.className = "regalo" + (abierto ? " abierto" : "");
+    b.dataset.id = i;
+    b.style.setProperty("--f",forma.f);
+    b.style.setProperty("--k",ESCALA_ABIERTO[color+"-"+forma.n]);
+    b.setAttribute("aria-label","Regalo " + i + (abierto ? ", abierto" : ", cerrado"));
+    const img = document.createElement("img");
+    img.alt = "";
+    img.draggable = false;
+    img.decoding = "async";
+    img.className = abierto ? "a" : "c";
+    img.src = "img/regalo-" + (abierto ? "abierto" : "cerrado") + "-" + color + "-" + forma.n + ".png";
+    b.appendChild(img);
+    b.addEventListener("click",()=>tocar(Number(b.dataset.id),b));
+    cont.appendChild(b);
   }
-  cont.classList.add("ver");
   const disponibles = estado.fecha >= PRIMER_DIA_REGALOS && estado.fecha <= "2026-12-25" && Object.keys(estado.regalos||{}).length < TOTAL;
   $("pila").classList.toggle("disponible",disponibles);
 }
