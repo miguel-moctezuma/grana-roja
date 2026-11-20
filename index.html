@@ -53,10 +53,32 @@ img{-webkit-user-drag:none;user-select:none;-webkit-user-select:none;-webkit-tou
 #navegacion button{width:44px;height:44px;display:grid;place-items:center;touch-action:manipulation}
 #navegacion button::before{content:"";width:8px;height:8px;border-radius:50%;background:#d9b989;opacity:.55;transition:transform .2s,opacity .2s}
 #navegacion button.activo::before{transform:scale(1.6);opacity:1;background:#fff0d2}
-/* Ventana: nieve y Santa recortados al cristal */
-#ventana{position:absolute;left:24.2%;top:37.5%;width:22.7%;height:17%;overflow:hidden;pointer-events:none}
-.nieve{position:absolute;inset:-100% 0 0 0;background-image:radial-gradient(circle,#fff 1.4px,transparent 2px),radial-gradient(circle,#fff 1px,transparent 1.6px);background-size:34px 41px,23px 29px;background-position:0 0,11px 17px;opacity:.7;animation:nevar 14s linear infinite}
-@keyframes nevar{to{transform:translateY(100%)}}
+/* Ventana: nieve y Santa visibles a través de los dos cristales */
+#ventana{
+  position:absolute;left:25.8%;top:39.6%;width:19.3%;height:14.6%;
+  overflow:hidden;pointer-events:none;
+  mask-image:linear-gradient(to right,#000 0 47%,transparent 47% 55%,#000 55% 100%);
+}
+.nieve,.nieve::before,.nieve::after{position:absolute;inset:0}
+.nieve::before,.nieve::after{
+  content:"";background-repeat:repeat;
+  animation:nevar var(--duracion) linear infinite;
+}
+.nieve::before{
+  --duracion:18s;--deriva:43px;--caida:146px;
+  opacity:.62;background-size:43px 73px;
+  background-image:
+    radial-gradient(circle at 12px 16px,#fff 0 1px,transparent 1.6px),
+    radial-gradient(circle at 34px 50px,#e8f2ff 0 .65px,transparent 1.2px);
+}
+.nieve::after{
+  --duracion:28s;--deriva:61px;--caida:194px;
+  opacity:.8;background-size:61px 97px;
+  background-image:
+    radial-gradient(circle at 44px 24px,#fff 0 1.45px,transparent 2.2px),
+    radial-gradient(circle at 14px 76px,#fff 0 .8px,transparent 1.4px);
+}
+@keyframes nevar{to{background-position:var(--deriva) var(--caida)}}
 
 /* ---------- Objetos decorativos ---------- */
 .obj{position:absolute;display:none;line-height:0;user-select:none}
@@ -67,9 +89,11 @@ img{-webkit-user-drag:none;user-select:none;-webkit-user-select:none;-webkit-tou
 @keyframes aparece{from{opacity:0;transform:scale(.6)}to{opacity:1;transform:none}}
 @keyframes fundir{from{opacity:0}to{opacity:1}}
 
-#o1{left:29%;top:18%;width:42%}
-#o2{left:72%;top:32%;width:9%}
-#o3{left:23.8%;top:35.5%;width:24%}
+#o1{left:0;top:16.4%;width:100%;height:8.3%;pointer-events:none}
+#o1.hay{display:flex}
+#o1 img{flex:0 0 33.333333%;width:33.333333%;height:100%;object-fit:fill}
+#o2{left:75.1%;top:25.8%;width:9%}
+#o3{left:23.8%;top:32.1%;width:24%;mix-blend-mode:screen;pointer-events:none}
 #o3 img{animation:titila 3.2s ease-in-out infinite}
 @keyframes titila{50%{opacity:.6}}
 #o4,#o5,#o6{left:50%;bottom:34%;width:13%}
@@ -83,7 +107,7 @@ img{-webkit-user-drag:none;user-select:none;-webkit-user-select:none;-webkit-tou
 #o8 img{position:absolute;top:0;width:24%;height:auto}
 #o8 img:first-child{left:0;transform:scaleX(-1)}
 #o8 img:last-child{right:0}
-#o9{left:19%;bottom:29%;width:7%;transform-origin:50% 100%}
+#o9{left:21.675%;bottom:28.5%;width:6.65%;transform-origin:50% 100%}
 
 /* ---------- Contador ---------- */
 #contador{position:absolute;right:4%;top:calc(env(safe-area-inset-top) + 1.4%);padding:.5rem .8rem;border-radius:.6rem;background:rgba(74,46,27,.88);border:1px solid var(--miel);text-align:center;font-family:var(--serif);color:var(--crema);font-size:.7rem;opacity:.9;z-index:8}
@@ -302,9 +326,9 @@ img{-webkit-user-drag:none;user-select:none;-webkit-user-select:none;-webkit-tou
     <div id="ventana"><div class="nieve"></div><div id="santa"><img src="img/santa.png" alt=""></div></div>
 
     <!-- Nueve objetos, uno por día del 21 al 29 de nov. -->
-    <div class="obj fundir" id="o1" data-n="1" aria-label="Guirnalda"><img src="img/obj-1-guirnalda.png" alt=""></div>
+    <div class="obj fundir" id="o1" data-n="1" aria-label="Guirnalda"><img src="img/obj-1-guirnalda.png" alt=""><img src="img/obj-1-guirnalda.png" alt=""><img src="img/obj-1-guirnalda.png" alt=""></div>
     <div class="obj" id="o2" data-n="2" aria-label="Corona navideña"><img src="img/obj-2-corona.png" alt=""></div>
-    <div class="obj fundir" id="o3" data-n="3" aria-label="Luces cálidas"><img src="img/obj-3-luces.png" alt=""></div>
+    <div class="obj fundir" id="o3" data-n="3" aria-label="Luces cálidas"><img src="img/Warm%20Glowing%20Bulb%20Garland.png" alt=""></div>
     <div class="obj fundir" id="o4" data-n="4" aria-label="Pino navideño"><img src="img/obj-4-pino.png" alt=""></div>
     <div class="obj fundir" id="o5" data-n="5" aria-label="Esferas"><img src="img/obj-5-pino-con-esferas.png" alt=""></div>
     <div class="obj fundir" id="o6" data-n="6" aria-label="Estrella"><img src="img/Festive%20Glowing%20Christmas%20Tree.png" alt=""></div>
