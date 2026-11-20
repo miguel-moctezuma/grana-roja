@@ -146,6 +146,45 @@ img{-webkit-user-drag:none;user-select:none;-webkit-user-select:none;-webkit-tou
 @media (prefers-reduced-motion:reduce){
   *{animation-duration:.01s !important;animation-iteration-count:1 !important;transition-duration:.01s !important}
 }
+/* ---------- Christmas Radio ---------- */
+#christmasRadio{
+  --radio-izquierda:max(.75rem,env(safe-area-inset-left));
+  --radio-derecha:max(.75rem,env(safe-area-inset-right));
+  --radio-arriba:calc(env(safe-area-inset-top) + .75rem);
+  --radio-panel-arriba:calc(var(--radio-arriba) + 3.65rem);
+  position:absolute;inset:0;z-index:8;pointer-events:none;
+}
+#radioBoton{
+  position:absolute;top:var(--radio-arriba);left:var(--radio-izquierda);
+  min-height:44px;padding:.45rem .65rem;border:1px solid var(--miel);
+  border-radius:.65rem;background:linear-gradient(var(--madera),var(--nogal));
+  box-shadow:0 3px 9px #1b080580;color:var(--crema);
+  font:600 .875rem var(--serif);pointer-events:auto;
+}
+#radioBoton span{color:var(--dorado);margin-right:.25rem}
+#radioBoton:focus-visible,#radioPanel:focus-visible{
+  outline:2px solid var(--crema);outline-offset:2px;
+}
+#radioPanel{
+  position:absolute;top:var(--radio-panel-arriba);
+  left:var(--radio-izquierda);right:var(--radio-derecha);width:auto;max-width:22rem;
+  max-height:calc(55% - var(--radio-panel-arriba));
+  overflow:auto;overscroll-behavior:contain;padding:.25rem;
+  border:1px solid var(--miel);border-radius:.85rem;background:var(--nogal);
+  box-shadow:0 4px 14px #1b080580;pointer-events:auto;
+}
+#radioPanel[hidden]{display:none}
+#radioPanel iframe{display:block;width:100%;border:0;border-radius:.65rem}
+@media (orientation:landscape) and (max-height:500px){
+  /* La sala está centrada entre las zonas seguras laterales. */
+  #christmasRadio{--radio-izquierda:.5rem;--radio-derecha:.5rem}
+  #radioBoton{width:44px;padding:0}
+  #radioBoton span{margin:0;font-size:1.2rem}
+  #radioBoton .radio-etiqueta{
+    position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);
+  }
+}
+
 </style>
 </head>
 <body>
@@ -188,6 +227,17 @@ img{-webkit-user-drag:none;user-select:none;-webkit-user-select:none;-webkit-tou
   <div id="contador" aria-live="off"><span id="contadorTexto">Días para Navidad</span><b id="contadorValor"></b></div>
   <div id="letrero">Lemito se chifló y se robó una cabaña jejeje</div>
   <div id="aviso" role="status"></div>
+  <div id="christmasRadio">
+    <button id="radioBoton" type="button" aria-controls="radioPanel" aria-expanded="false">
+      <span aria-hidden="true">♫</span><span class="radio-etiqueta">Christmas Radio</span>
+    </button>
+    <div id="radioPanel" role="region" aria-label="Reproductor de Christmas Radio" tabindex="0" hidden>
+      <iframe title="Christmas Radio en Spotify"
+        src="https://open.spotify.com/embed/playlist/37i9dQZF1DX0Yxoavh5qJV?utm_source=generator&amp;theme=0&amp;si=9531eb70af984623"
+        width="100%" height="152" loading="lazy" allowfullscreen
+        allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"></iframe>
+    </div>
+  </div>
 </main>
 
 <section id="zoomRegalos" role="dialog" aria-modal="true" aria-label="Tus regalos"><header id="zoomCabecera"><h2>Espero que te gusten, 1 al día chifis</h2><button id="cerrarZoom" type="button" aria-label="Cerrar regalos">×</button></header><div id="zoomScroll"><div id="regalos" aria-label="Regalos"></div></div></section>
@@ -487,6 +537,17 @@ function iniciarContador(){
 }
 
 iniciar();
+})();
+</script>
+<script>
+(function(){
+  const boton = document.getElementById("radioBoton");
+  const panel = document.getElementById("radioPanel");
+
+  boton.addEventListener("click", () => {
+    panel.hidden = !panel.hidden;
+    boton.setAttribute("aria-expanded", String(!panel.hidden));
+  });
 })();
 </script>
 </body>
