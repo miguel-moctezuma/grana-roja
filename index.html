@@ -6,7 +6,7 @@
 <meta name="robots" content="noindex, nofollow">
 <meta name="theme-color" content="#1b1008">
 <title>Aremi’s Cozy Christmas Tree</title>
-<link rel="preload" as="image" href="img/cabana.png">
+<link rel="preload" as="image" href="img/panorama-fondo.jpg">
 <style>
 :root{
   --nogal:#4a2e1b; --miel:#c98b3c; --crema:#f6ead2; --madera:#7a4a2a; --noche:#14203a; --brasa:#e8742c;
@@ -42,12 +42,19 @@ img{-webkit-user-drag:none;user-select:none;-webkit-user-select:none;-webkit-tou
 #sala{position:fixed;top:0;bottom:0;left:0;right:0;margin:0 auto;width:var(--ancho-sala);overflow:hidden;background:#1b1008}
 #sala[hidden]{display:none}
 
-/* La escena es la ilustración; todo lo decorativo se coloca en % de ELLA, así siempre queda pegado a su sitio */
-#escena{position:absolute;left:50%;top:var(--anclaje);width:var(--ancho-escena);height:calc(var(--ancho-escena) * 2526 / 1170);transform:translate(-50%,calc(var(--anclaje) * -1))}
+/* Panorama: tres zonas, desplazamiento horizontal táctil. */
+#panScroll{position:absolute;inset:0;overflow-x:auto;overflow-y:hidden;scroll-snap-type:x mandatory;overscroll-behavior-x:contain;-webkit-overflow-scrolling:touch;scrollbar-width:none;touch-action:pan-x}
+#panScroll::-webkit-scrollbar{display:none}
+#panTrack{position:relative;width:calc(var(--ancho-escena) * 3);height:100%;min-width:300%}
+#escena{position:absolute;left:0;top:var(--anclaje);width:100%;height:calc(var(--ancho-escena) * 2526 / 1170);transform:translateY(calc(var(--anclaje) * -1))}
 #fondo{position:absolute;inset:0;width:100%;height:100%;display:block;pointer-events:none}
-
+.zona-snap{position:absolute;top:0;bottom:0;width:33.333333%;scroll-snap-align:center;pointer-events:none}
+#navegacion{position:absolute;bottom:calc(env(safe-area-inset-bottom) + 1rem);left:50%;transform:translateX(-50%);display:flex;gap:.7rem;align-items:center;z-index:9;padding:.5rem .7rem;background:rgba(27,16,8,.62);border-radius:2rem;backdrop-filter:blur(6px)}
+#navegacion button{width:44px;height:44px;display:grid;place-items:center;touch-action:manipulation}
+#navegacion button::before{content:"";width:8px;height:8px;border-radius:50%;background:#d9b989;opacity:.55;transition:transform .2s,opacity .2s}
+#navegacion button.activo::before{transform:scale(1.6);opacity:1;background:#fff0d2}
 /* Ventana: nieve y Santa recortados al cristal */
-#ventana{position:absolute;left:9.9%;top:36.2%;width:33.7%;height:12%;overflow:hidden;pointer-events:none}
+#ventana{position:absolute;left:24.2%;top:37.5%;width:22.7%;height:17%;overflow:hidden;pointer-events:none}
 .nieve{position:absolute;inset:-100% 0 0 0;background-image:radial-gradient(circle,#fff 1.4px,transparent 2px),radial-gradient(circle,#fff 1px,transparent 1.6px);background-size:34px 41px,23px 29px;background-position:0 0,11px 17px;opacity:.7;animation:nevar 14s linear infinite}
 @keyframes nevar{to{transform:translateY(100%)}}
 
@@ -60,19 +67,19 @@ img{-webkit-user-drag:none;user-select:none;-webkit-user-select:none;-webkit-tou
 @keyframes aparece{from{opacity:0;transform:scale(.6)}to{opacity:1;transform:none}}
 @keyframes fundir{from{opacity:0}to{opacity:1}}
 
-#o1{left:2%;top:16.8%;width:96%}
-#o2{left:60.5%;top:32.5%;width:19%}
-#o3{left:1.5%;top:31%;width:50%}
+#o1{left:29%;top:18%;width:42%}
+#o2{left:72%;top:32%;width:9%}
+#o3{left:23.8%;top:35.5%;width:24%}
 #o3 img{animation:titila 3.2s ease-in-out infinite}
 @keyframes titila{50%{opacity:.6}}
-#o4,#o5,#o6{left:41.5%;bottom:31.5%;width:31%}
-#o7{left:81.2%;bottom:42.2%;width:10.6%;transform-origin:50% 100%}
+#o4,#o5,#o6{left:50%;bottom:30%;width:13%}
+#o7{left:75%;bottom:34.5%;width:8%;transform-origin:50% 100%}
 #o7 img{position:relative;transform-origin:50% 100%;animation:llama 1.7s ease-in-out infinite}
 @keyframes llama{0%,100%{transform:scale(1,1)}35%{transform:scale(.97,1.05)}70%{transform:scale(1.02,.98)}}
 .brillo{position:absolute;left:-110%;right:-110%;top:-45%;bottom:-25%;background:radial-gradient(ellipse at 50% 70%,rgba(255,170,70,.55),rgba(255,120,30,.2) 45%,transparent 70%);animation:brillo 2.6s ease-in-out infinite;pointer-events:none}
 @keyframes brillo{50%{opacity:.7}}
-#o8{left:72.5%;top:47.6%;width:9%;transform-origin:50% 0}
-#o9{left:31%;bottom:30.5%;width:14%;transform-origin:50% 100%}
+#o8{left:70.5%;top:44%;width:4.5%;transform-origin:50% 0}
+#o9{left:19%;bottom:29%;width:7%;transform-origin:50% 100%}
 
 /* ---------- Contador ---------- */
 #contador{position:absolute;right:4%;top:calc(env(safe-area-inset-top) + 1.4%);padding:.5rem .8rem;border-radius:.6rem;background:rgba(74,46,27,.88);border:1px solid var(--miel);text-align:center;font-family:var(--serif);color:var(--crema);font-size:.7rem;opacity:.9;z-index:8}
@@ -90,8 +97,26 @@ img{-webkit-user-drag:none;user-select:none;-webkit-user-select:none;-webkit-tou
 @keyframes vuelo{from{transform:translate(-105%,130%)}to{transform:translate(150%,15%)}}
 
 /* ---------- Regalos (PNG) ---------- */
-#regalos{position:absolute;left:3%;right:3%;bottom:calc(env(safe-area-inset-bottom) + 2.5%);display:none;flex-wrap:wrap;justify-content:center;align-items:flex-end;align-content:flex-end;gap:.05rem .3rem;z-index:5}
+
+/* Pila decorativa integrada en el panorama */
+#pila{position:absolute;left:55%;top:70%;width:12%;min-height:44px;z-index:7;display:none;filter:drop-shadow(0 9px 7px rgba(20,8,2,.5));transform-origin:center bottom}
+#pila.ver{display:block}
+#pila img{width:100%;height:auto;display:block;pointer-events:none}
+#pila.disponible{animation:respiraPila 2.8s ease-in-out infinite}
+@keyframes respiraPila{50%{filter:drop-shadow(0 0 16px rgba(255,202,96,.85));transform:translateY(-4px)}}
+/* Vista ampliada: separada del desplazamiento horizontal */
+#zoomRegalos{position:fixed;inset:0;z-index:18;display:none;flex-direction:column;align-items:center;background:#321408 url('img/piso-zoom.jpg') center center/cover no-repeat;overscroll-behavior:contain}
+#zoomRegalos.ver{display:flex}
+#zoomCabecera{width:min(100%,560px);display:flex;align-items:center;justify-content:space-between;padding:calc(env(safe-area-inset-top) + 12px) 20px 12px;flex:none;background:linear-gradient(#1b0b05c9,transparent)}
+#zoomCabecera h2{font-family:var(--serif);font-size:1.25rem;font-weight:500;text-shadow:0 2px 5px #1b0805}
+#cerrarZoom{width:44px;height:44px;border-radius:50%;background:rgba(28,12,6,.72);font-size:1.7rem;line-height:1}
+#zoomScroll{width:100%;flex:1;min-height:0;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;overscroll-behavior-y:contain;padding:20px 6px calc(env(safe-area-inset-bottom) + 34px)}
+#regalos{position:relative;left:auto;right:auto;bottom:auto;display:flex;flex-direction:column-reverse;align-items:center;gap:0;width:100%;max-width:520px;margin:auto;z-index:auto}
 #regalos.ver{display:flex}
+.filaRegalos{display:flex;justify-content:center;align-items:flex-end;width:100%;gap:clamp(0px,.5vw,5px);margin-top:-3px;position:relative}
+.filaRegalos .regalo{--w:calc(min(100vw,520px) * var(--f) * 1.18);min-width:44px;min-height:52px;z-index:1}
+.filaRegalos .regalo:focus-visible,#pila:focus-visible,#cerrarZoom:focus-visible{outline:3px solid #fff0c5;outline-offset:3px}
+@media(max-width:390px){.filaRegalos .regalo{--w:calc(100vw * var(--f) * 1.05)}}
 .regalo{position:relative;flex:none;
   --w:calc(var(--ancho-sala) * var(--f));
   --h:calc(var(--w) / var(--r));
@@ -135,8 +160,11 @@ img{-webkit-user-drag:none;user-select:none;-webkit-user-select:none;-webkit-tou
 </div>
 
 <main id="sala" hidden>
-  <div id="escena">
-    <img id="fondo" src="img/cabana.png" alt="" decoding="async">
+  <div id="panScroll" aria-label="Recorrer la cabaña horizontalmente">
+   <div id="panTrack">
+    <div class="zona-snap" style="left:0"></div><div class="zona-snap" style="left:33.333333%"></div><div class="zona-snap" style="left:66.666667%"></div>
+    <div id="escena">
+    <img id="fondo" src="img/panorama-fondo.jpg" alt="" decoding="async">
 
     <div id="ventana"><div class="nieve"></div><div id="santa"><img src="img/santa.png" alt=""></div></div>
 
@@ -150,14 +178,19 @@ img{-webkit-user-drag:none;user-select:none;-webkit-user-select:none;-webkit-tou
     <div class="obj" id="o7" data-n="7" aria-label="Chimenea encendida"><i class="brillo"></i><img src="img/obj-7-fuego.png" alt=""></div>
     <div class="obj" id="o8" data-n="8" aria-label="Calcetín navideño"><img src="img/obj-8-calcetin.png" alt=""></div>
     <div class="obj" id="o9" data-n="9" aria-label="Regalo decorativo"><img src="img/obj-9-regalo-decorativo.png" alt=""></div>
+    <button id="pila" type="button" aria-label="Ver los 24 regalos"><img src="img/monton-regalos.png" alt=""></button>
+    </div>
+   </div>
   </div>
+  <nav id="navegacion" aria-label="Zonas de la cabaña"><button type="button" data-zona="0" aria-label="Ir al sofá"></button><button type="button" data-zona="1" aria-label="Ir al pino"></button><button type="button" data-zona="2" aria-label="Ir a la chimenea"></button></nav>
 
-  <div id="regalos" aria-label="Regalos"></div>
 
   <div id="contador" aria-live="off"><span id="contadorTexto">Faltan para Navidad</span><b id="contadorValor"></b></div>
   <div id="letrero">Lemito se chifló y se robó una cabaña 🏡</div>
   <div id="aviso" role="status"></div>
 </main>
+
+<section id="zoomRegalos" role="dialog" aria-modal="true" aria-label="Los 24 regalos"><header id="zoomCabecera"><h2>Los regalos de Aremi</h2><button id="cerrarZoom" type="button" aria-label="Cerrar regalos">×</button></header><div id="zoomScroll"><div id="regalos" aria-label="Regalos"></div></div></section>
 
 <div class="velo" id="veloCaja">
   <div id="caja"><div id="etiqueta"></div><div id="papelito">Espero tu review</div></div>
@@ -204,7 +237,7 @@ const ESCALA_ABIERTO = {
 const precargar = urls => Promise.all(urls.map(u => new Promise(res => {
   const i = new Image(); i.onload = i.onerror = () => res(); i.src = u;
 })));
-const fondoListo = precargar(["img/cabana.png"]);
+const fondoListo = precargar(["img/panorama-fondo.jpg", "img/monton-regalos.png", "img/piso-zoom.jpg"]);
 const regalosListos = fondoListo.then(() => {
   const l = [];
   COLORES.forEach(c => FORMAS.forEach(f => { l.push("img/regalo-cerrado-"+c+"-"+f.n+".png"); l.push("img/regalo-abierto-"+c+"-"+f.n+".png"); }));
@@ -267,6 +300,22 @@ $("entrar").addEventListener("click", async () => {
 });
 $("codigo").addEventListener("keydown", e => { if(e.key === "Enter") $("entrar").click(); });
 
+/* ===== Navegación del panorama ===== */
+function configurarPanorama(){
+  const sc = $("panScroll");
+  const botones = Array.from(document.querySelectorAll("#navegacion button"));
+  const paso = () => sc.scrollWidth / 3;
+  const ir = (n, suave=true) => sc.scrollTo({left:Math.max(0, paso()*(n+.5)-sc.clientWidth/2),behavior:suave?"smooth":"instant"});
+  const actualizar = () => {
+    const zona = Math.max(0,Math.min(2,Math.round((sc.scrollLeft+sc.clientWidth/2)/paso()-.5)));
+    botones.forEach((b,i)=>{b.classList.toggle("activo",i===zona);b.setAttribute("aria-current",i===zona?"true":"false");});
+  };
+  botones.forEach((b,i)=>b.addEventListener("click",()=>ir(i)));
+  sc.addEventListener("scroll",actualizar,{passive:true});
+  window.addEventListener("resize",()=>{actualizar();});
+  requestAnimationFrame(()=>{ir(1,false);actualizar();});
+}
+
 /* ===== Sala: etapa según la fecha del servidor ===== */
 function diasDesde(base, fecha){
   return Math.floor((Date.parse(fecha) - Date.parse(base)) / 86400000);
@@ -275,6 +324,7 @@ function diasDesde(base, fecha){
 function entrarSala(){
   $("sala").hidden = false;
   $("bienvenida").classList.add("fuera");
+  configurarPanorama();
   pintarSala();
   iniciarContador();
 }
@@ -305,7 +355,7 @@ function pintarSala(){
   }
 
   // Regalos: desde el 2 de diciembre
-  if(f >= PRIMER_DIA_REGALOS) pintarRegalos();
+  if(f >= PRIMER_DIA_REGALOS){ pintarRegalos(); $("pila").classList.add("ver"); }
 }
 
 /* ===== Regalos ===== */
@@ -315,32 +365,54 @@ function aspectoRegalo(i){
   return { color: COLORES[combo % 4], forma: FORMAS[Math.floor(combo / 4)] };
 }
 
+function abrirZoom(){
+  $("zoomRegalos").classList.add("ver");
+  $("zoomScroll").scrollTop = 0;
+  $("cerrarZoom").focus({preventScroll:true});
+}
+function cerrarZoom(){
+  $("zoomRegalos").classList.remove("ver");
+  $("pila").focus({preventScroll:true});
+}
+$("pila").addEventListener("click",abrirZoom);
+$("cerrarZoom").addEventListener("click",cerrarZoom);
+document.addEventListener("keydown",e=>{if(e.key==="Escape" && $("zoomRegalos").classList.contains("ver")) cerrarZoom();});
+
 function pintarRegalos(){
   const cont = $("regalos");
   cont.innerHTML = "";
-  for(let i = 1; i <= TOTAL; i++){
-    const { color, forma } = aspectoRegalo(i);
-    const abierto = !!estado.regalos[i];
-    const b = document.createElement("button");
-    b.className = "regalo" + (abierto ? " abierto" : "");
-    b.dataset.id = i;
-    b.style.setProperty("--f", forma.f);
-    b.style.setProperty("--r", forma.r);
-    b.style.setProperty("--k", ESCALA_ABIERTO[color + "-" + forma.n]);
-    b.setAttribute("aria-label", "Regalo");
-
-    const img = document.createElement("img");
-    img.alt = "";
-    img.draggable = false;
-    img.decoding = "async";
-    img.className = abierto ? "a" : "c";
-    img.src = "img/regalo-" + (abierto ? "abierto" : "cerrado") + "-" + color + "-" + forma.n + ".png";
-    b.appendChild(img);
-
-    b.addEventListener("click", () => tocar(i, b));
-    cont.appendChild(b);
+  // De abajo hacia arriba: 5, 5, 5, 4, 3, 2 (24 cajas)
+  const filas = [5,5,5,4,3,2];
+  let i = 1;
+  for(const cantidad of filas){
+    const fila = document.createElement("div");
+    fila.className = "filaRegalos";
+    for(let j=0;j<cantidad;j++,i++){
+      const {color,forma} = aspectoRegalo(i);
+      const abierto = !!estado.regalos[i];
+      const b = document.createElement("button");
+      b.type = "button";
+      b.className = "regalo" + (abierto ? " abierto" : "");
+      b.dataset.id = i;
+      b.style.setProperty("--f",forma.f);
+      b.style.setProperty("--r",forma.r);
+      b.style.setProperty("--k",ESCALA_ABIERTO[color+"-"+forma.n]);
+      b.setAttribute("aria-label","Regalo " + i + (abierto ? ", abierto" : ", cerrado"));
+      const img = document.createElement("img");
+      img.alt = "";
+      img.draggable = false;
+      img.decoding = "async";
+      img.className = abierto ? "a" : "c";
+      img.src = "img/regalo-" + (abierto ? "abierto" : "cerrado") + "-" + color + "-" + forma.n + ".png";
+      b.appendChild(img);
+      b.addEventListener("click",()=>tocar(Number(b.dataset.id),b));
+      fila.appendChild(b);
+    }
+    cont.appendChild(fila);
   }
   cont.classList.add("ver");
+  const disponibles = estado.fecha >= PRIMER_DIA_REGALOS && estado.fecha <= "2026-12-25" && Object.keys(estado.regalos||{}).length < TOTAL;
+  $("pila").classList.toggle("disponible",disponibles);
 }
 
 function fechaDeDia(dia){
