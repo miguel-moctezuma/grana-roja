@@ -1,0 +1,11 @@
+{
+  "id": "./",
+  "name": "Grana Roja",
+  "short_name": "Grana Roja",
+  "lang": "es-MX",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#1b1008",
+  "theme_color": "#1b1008"
+}

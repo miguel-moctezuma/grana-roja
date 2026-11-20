@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="robots" content="noindex, nofollow">
 <meta name="theme-color" content="#1b1008">
+<link rel="manifest" href="manifest.webmanifest">
 <title>Aremi’s Cozy Christmas Tree</title>
 <link rel="preload" as="image" href="img/panorama-fondo.jpg">
 <style>
@@ -130,6 +131,17 @@ img{-webkit-user-drag:none;user-select:none;-webkit-user-select:none;-webkit-tou
 #pila{position:absolute;left:48%;bottom:28%;width:18%;min-height:44px;z-index:7;display:none;filter:drop-shadow(0 9px 7px rgba(20,8,2,.5));transform-origin:center bottom}
 #pila.ver{display:block}
 #pila img{width:100%;height:auto;display:block;pointer-events:none}
+#pilaDisponibles{
+  position:absolute;left:50%;bottom:calc(100% + .3rem);transform:translateX(-50%);
+  width:max-content;padding:.32rem .6rem;border:1px solid #d7a96e;border-radius:1rem;
+  background:#68252e;color:#fff2d9;box-shadow:0 2px 6px #1e0c0870;
+  font:600 .72rem/1.15 var(--fuente);pointer-events:none;
+}
+#pilaDisponibles::after{
+  content:"";position:absolute;left:50%;bottom:-4px;width:6px;height:6px;
+  transform:translateX(-50%) rotate(45deg);background:#68252e;
+  border-right:1px solid #d7a96e;border-bottom:1px solid #d7a96e;
+}
 #pila.disponible{animation:respiraPila 2.8s ease-in-out infinite}
 @keyframes respiraPila{50%{filter:drop-shadow(0 0 16px rgba(255,202,96,.85));transform:translateY(-4px)}}
 /* Vista ampliada de los regalos */
@@ -161,8 +173,8 @@ img{-webkit-user-drag:none;user-select:none;-webkit-user-select:none;-webkit-tou
 }
 @media(min-width:550px){#regalos{--columnas:4}}
 .regalo{
-  position:relative;display:grid;grid-template-rows:minmax(0,1fr) auto;justify-items:center;
-  align-items:end;gap:.3rem;aspect-ratio:.88;padding:.38rem .2rem .45rem;min-height:104px;
+  position:relative;display:grid;grid-template-rows:minmax(0,1fr);justify-items:center;
+  align-items:end;aspect-ratio:.88;padding:.5rem .2rem .45rem;min-height:104px;
   background:radial-gradient(ellipse at 50% 82%,#9c633849 0%,transparent 55%),linear-gradient(155deg,#503025,#291711);
   border:1px solid #ba89586e;border-bottom:4px solid #a66a3e;border-radius:.85rem .85rem .4rem .4rem;
   box-shadow:inset 0 1px #ffda9a2b,0 .3rem .55rem #180a0780;
@@ -173,11 +185,6 @@ img{-webkit-user-drag:none;user-select:none;-webkit-user-select:none;-webkit-tou
   filter:drop-shadow(0 .24rem .2rem #14080590);
 }
 .regalo img.a{width:min(100%,calc(100% * var(--f) * 8 * var(--k)))}
-.regalo::after{
-  content:attr(data-id);display:grid;place-items:center;min-width:1.55rem;height:1.25rem;
-  padding:0 .3rem;border-radius:.3rem;background:#24170f;color:#ffe5b6;
-  border:1px solid #c1965973;font:600 .76rem var(--serif);
-}
 .regalo:focus-visible,#pila:focus-visible,#cerrarZoom:focus-visible{outline:3px solid #fff0c5;outline-offset:2px}
 #avisoZoom{
   position:absolute;bottom:calc(env(safe-area-inset-bottom) + .85rem);left:50%;transform:translateX(-50%);z-index:2;
@@ -301,6 +308,12 @@ img{-webkit-user-drag:none;user-select:none;-webkit-user-select:none;-webkit-tou
   content:"";display:block;width:34%;height:.28rem;margin:.55rem auto 0;border-radius:1em;
   background:repeating-linear-gradient(90deg,#241711 0 2px,#a26945 2px 4px);
 }
+#activarAvisos{
+  min-height:44px;margin-top:.4rem;padding:.25rem .4rem;
+  border:1px solid var(--miel);border-radius:.5rem;background:#54242c;color:var(--crema);
+  font:600 .72rem var(--fuente);
+}
+#estadoAvisos{max-width:10rem;line-height:1.3}
 </style>
 </head>
 <body>
@@ -338,7 +351,7 @@ img{-webkit-user-drag:none;user-select:none;-webkit-user-select:none;-webkit-tou
     <button id="radioBoton" type="button" aria-label="Abrir Christmas Radio" aria-haspopup="dialog" aria-controls="radioPanel" aria-expanded="false">
       <span class="radioCarcasa" aria-hidden="true"><span class="radioPantalla">♫</span></span>
     </button>
-    <button id="pila" type="button" aria-label="Ver los 24 regalos"><img src="img/monton-regalos.png" alt=""></button>
+    <button id="pila" type="button" aria-label="Ver los 24 regalos" aria-describedby="pilaDisponibles"><img src="img/monton-regalos.png" alt=""><span id="pilaDisponibles" aria-live="polite">0 disponibles</span></button>
     </div>
    </div>
   </div>
@@ -350,7 +363,10 @@ img{-webkit-user-drag:none;user-select:none;-webkit-user-select:none;-webkit-tou
     <span class="contadorUnidad" aria-hidden="true"><span class="contadorFicha">00</span><small>h</small></span>
     <span class="contadorUnidad" aria-hidden="true"><span class="contadorFicha">00</span><small>min</small></span>
     <span class="contadorUnidad" aria-hidden="true"><span class="contadorFicha">00</span><small>s</small></span>
-  </b></div>
+  </b>
+  <button id="activarAvisos" type="button" hidden>Avísame cuando haya un regalo</button>
+  <p id="estadoAvisos" role="status"></p>
+  </div>
   <div id="letrero">Lemito se chifló y se robó una cabaña jejeje</div>
   <div id="aviso" role="status"></div>
 </main>
@@ -512,6 +528,7 @@ function entrarSala(){
   configurarPanorama();
   pintarSala();
   iniciarContador();
+  prepararAvisos();
 }
 
 function pintarSala(){
@@ -586,8 +603,12 @@ function pintarRegalos(){
     b.addEventListener("click",()=>tocar(Number(b.dataset.id),b));
     cont.appendChild(b);
   }
-  const disponibles = estado.fecha >= PRIMER_DIA_REGALOS && estado.fecha <= "2026-12-25" && Object.keys(estado.regalos||{}).length < TOTAL;
-  $("pila").classList.toggle("disponible",disponibles);
+  const abiertos = Object.keys(estado.regalos).length;
+  const disponibles = estado.disponibles ?? Math.max(0, Math.min(estado.dia, TOTAL) - abiertos);
+  const burbuja = $("pilaDisponibles");
+  const texto = disponibles + (disponibles === 1 ? " disponible" : " disponibles");
+  if(burbuja.textContent !== texto) burbuja.textContent = texto;
+  $("pila").classList.toggle("disponible", disponibles > 0);
 }
 
 function fechaDeDia(dia){
@@ -674,6 +695,52 @@ function iniciarContador(){
   }
   tic();
   setInterval(tic, 1000);
+}
+
+
+/* ===== Avisos de regalos ===== */
+async function prepararAvisos(){
+  if(!("serviceWorker" in navigator) || !("PushManager" in window) || !("Notification" in window)) return;
+  if(!matchMedia("(display-mode: standalone)").matches && navigator.standalone !== true) return;
+  const boton = $("activarAvisos");
+  const mensaje = $("estadoAvisos");
+  let registro;
+  let clave;
+  try{
+    const configuracion = await llamar("/avisos/clave");
+    if(!configuracion.ok || typeof configuracion.clave !== "string") return;
+    const base64 = configuracion.clave.replace(/-/g, "+").replace(/_/g, "/");
+    clave = Uint8Array.from(atob(base64), caracter => caracter.charCodeAt(0));
+    if(clave.length !== 65 || clave[0] !== 4) return;
+    await navigator.serviceWorker.register("./avisos-sw.js");
+    registro = await navigator.serviceWorker.ready;
+  }catch{
+    return;
+  }
+
+  boton.hidden = false;
+  boton.addEventListener("click", async () => {
+    boton.disabled = true;
+    mensaje.textContent = "";
+    try{
+      // Se solicita directamente en respuesta al toque.
+      const permiso = await Notification.requestPermission();
+      if(permiso !== "granted"){
+        mensaje.textContent = "Puedes permitir los avisos en los ajustes del iPhone.";
+        return;
+      }
+      const suscripcion = await registro.pushManager.getSubscription() ||
+        await registro.pushManager.subscribe({userVisibleOnly:true, applicationServerKey:clave});
+      const respuesta = await llamar("/avisos/suscribir", {suscripcion:suscripcion.toJSON()});
+      if(!respuesta.ok) throw new Error("suscripción");
+      boton.hidden = true;
+      mensaje.textContent = "Avisos activados.";
+    }catch{
+      mensaje.textContent = "No se pudieron activar los avisos. Inténtalo de nuevo.";
+    }finally{
+      boton.disabled = false;
+    }
+  });
 }
 
 iniciar();
