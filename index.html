@@ -83,7 +83,7 @@ img{-webkit-user-drag:none;user-select:none;-webkit-user-select:none;-webkit-tou
 
 /* ---------- Contador ---------- */
 #contador{position:absolute;right:4%;top:calc(env(safe-area-inset-top) + 1.4%);padding:.5rem .8rem;border-radius:.6rem;background:rgba(74,46,27,.88);border:1px solid var(--miel);text-align:center;font-family:var(--serif);color:var(--crema);font-size:.7rem;opacity:.9;z-index:8}
-#contador b{display:block;margin-top:.15rem;font-size:.95rem;font-weight:600;color:var(--dorado);font-variant-numeric:tabular-nums}
+#contador b{margin-top:.15rem;font-size:.95rem;font-weight:600;color:var(--dorado);font-variant-numeric:tabular-nums}
 
 /* ---------- Letrero ---------- */
 #letrero{position:absolute;left:50%;top:44%;transform:translateX(-50%);max-width:82%;padding:.9rem 1.3rem;border-radius:1.2rem;background:rgba(246,234,210,.88);color:var(--nogal);text-align:center;font-weight:600;font-size:1.05rem;box-shadow:0 .3rem 1.2rem rgba(0,0,0,.3);opacity:0;pointer-events:none;z-index:10}
@@ -146,56 +146,108 @@ img{-webkit-user-drag:none;user-select:none;-webkit-user-select:none;-webkit-tou
 @media (prefers-reduced-motion:reduce){
   *{animation-duration:.01s !important;animation-iteration-count:1 !important;transition-duration:.01s !important}
 }
-/* ---------- Christmas Radio ---------- */
-#christmasRadio{
-  --radio-izquierda:max(.75rem,env(safe-area-inset-left));
-  --radio-derecha:max(.75rem,env(safe-area-inset-right));
-  --radio-arriba:calc(env(safe-area-inset-top) + .75rem);
-  --radio-panel-arriba:calc(var(--radio-arriba) + 3.65rem);
-  position:absolute;inset:0;z-index:8;pointer-events:none;
+/* ---------- Etiqueta de bienvenida ---------- */
+#bienvenida{
+  padding:calc(env(safe-area-inset-top) + 1rem) max(1rem,env(safe-area-inset-right))
+    calc(env(safe-area-inset-bottom) + 1rem) max(1rem,env(safe-area-inset-left));
+  background:radial-gradient(ellipse,#081c0e18 25%,#08170bb0),url('img/papel-navidad.jpg') center / cover;
+  overflow:auto;
 }
-#radioBoton{
-  position:absolute;top:var(--radio-arriba);left:var(--radio-izquierda);
-  min-height:44px;padding:.45rem .65rem;border:1px solid var(--miel);
-  border-radius:.65rem;background:linear-gradient(var(--madera),var(--nogal));
-  box-shadow:0 3px 9px #1b080580;color:var(--crema);
-  font:600 .875rem var(--serif);pointer-events:auto;
+#etiquetaBienvenida{
+  position:relative;width:min(100%,23rem);margin:auto;
+  padding:2.55rem clamp(.75rem,5vw,1.6rem) .95rem;text-align:center;
+  border:1px solid #d7ad63;border-radius:1.1rem 1.1rem .65rem .65rem;
+  color:var(--vino);background:linear-gradient(145deg,#fff4d9,#eddbb5);
+  box-shadow:0 0 0 4px #602225,0 .65rem 2rem #100b07a8;
 }
-#radioBoton span{color:var(--dorado);margin-right:.25rem}
-#radioBoton:focus-visible,#radioPanel:focus-visible{
-  outline:2px solid var(--crema);outline-offset:2px;
+#etiquetaBienvenida::before{
+  content:"";position:absolute;top:-1rem;left:50%;width:1rem;height:2.4rem;
+  transform:translateX(-50%) rotate(13deg);border:4px solid #9e202b;border-radius:50%;
+  box-shadow:inset 1px 0 #e37967,1px 1px 2px #53221570;
 }
-#radioPanel{
-  position:absolute;top:var(--radio-panel-arriba);
-  left:var(--radio-izquierda);right:var(--radio-derecha);width:auto;max-width:22rem;
-  max-height:calc(55% - var(--radio-panel-arriba));
-  overflow:auto;overscroll-behavior:contain;padding:.25rem;
-  border:1px solid var(--miel);border-radius:.85rem;background:var(--nogal);
-  box-shadow:0 4px 14px #1b080580;pointer-events:auto;
+#bienvenida h1{font:600 clamp(1.8rem,7.5vw,2.75rem)/1.08 var(--serif)}
+#etiquetaBienvenida #acceso{margin:1rem auto 0;width:100%}
+#etiquetaBienvenida #codigo{color:#391f15;background:#fff9e9;border-color:#a47648}
+#etiquetaBienvenida #codigo::placeholder{color:#6f5140}
+#etiquetaBienvenida #entrar{min-height:44px;background:var(--vino);color:#fff4de}
+#etiquetaBienvenida #errorAcceso{margin-top:.45rem;color:#84242e}
+
+/* ---------- Contador de solapas ---------- */
+#contador{
+  top:calc(env(safe-area-inset-top) + .65rem);
+  right:max(.65rem,env(safe-area-inset-right));
+  padding:.4rem .5rem;border-radius:.55rem;background:#34231a;
+  box-shadow:0 3px 9px #170b0790;
 }
-#radioPanel[hidden]{display:none}
-#radioPanel iframe{display:block;width:100%;border:0;border-radius:.65rem}
+#contador #contadorValor{display:grid;grid-template-columns:repeat(4,1fr);gap:.22rem}
+.contadorUnidad{display:grid;justify-items:center;gap:.15rem}
+.contadorFicha{
+  display:block;min-width:2.1em;padding:.14em .22em;border-radius:.2em;
+  background:linear-gradient(#251e19 0 48%,#120e0c 48% 53%,#3a2b21 53%);
+  color:#fff2d8;box-shadow:0 2px 0 #160f0c;
+  font:600 .91rem/1.25 ui-monospace,monospace;
+}
+.contadorUnidad small{color:#f0d1a0;font:.6rem var(--fuente)}
 @media (orientation:landscape) and (max-height:500px){
-  /* La sala está centrada entre las zonas seguras laterales. */
-  #christmasRadio{--radio-izquierda:.5rem;--radio-derecha:.5rem}
-  #radioBoton{width:44px;padding:0}
-  #radioBoton span{margin:0;font-size:1.2rem}
-  #radioBoton .radio-etiqueta{
-    position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);
-  }
+  #contador{right:.65rem}
 }
 
+/* ---------- Christmas Radio ---------- */
+#radioBoton{
+  position:absolute;z-index:8;left:25%;bottom:41.15%;transform:translateX(-50%);
+  width:5.9%;min-width:44px;min-height:44px;display:grid;align-items:end;
+}
+.radioCarcasa{
+  display:grid;position:relative;place-items:center;width:100%;aspect-ratio:1.55;
+  margin-bottom:4px;border:2px solid #d09758;border-radius:19%;
+  background:linear-gradient(145deg,#865032,#3e241b 60%);
+  box-shadow:0 3px 5px #1c0c06b0;
+}
+.radioCarcasa::after{
+  content:"";position:absolute;bottom:-5px;width:72%;height:4px;
+  border-inline:4px solid #392419;
+}
+.radioPantalla{
+  display:grid;place-items:center;width:79%;height:75%;border:1px solid #ad8852;
+  border-radius:23%;background:radial-gradient(ellipse,#315747,#11231d);
+  color:#ffe3a2;font:700 clamp(.75rem,4vw,1.65rem) var(--serif);
+}
+#radioBoton:focus-visible,.radioControl:focus-visible{outline:2px solid #fff1cb;outline-offset:3px}
+#radioPanel{
+  position:fixed;inset:0;margin:auto;width:min(25rem,calc(100% - 2rem - env(safe-area-inset-left) - env(safe-area-inset-right)));
+  max-height:calc(var(--vh) * 100 - 1.5rem - env(safe-area-inset-top) - env(safe-area-inset-bottom));
+  overflow:auto;overscroll-behavior:contain;padding:.65rem;
+  border:2px solid #c59355;border-radius:1.15rem;background:linear-gradient(135deg,#75462d,#3a2218);
+  color:var(--crema);box-shadow:0 .8rem 2.5rem #130904bb;
+}
+#radioPanel::backdrop{background:#140b06b0}
+#radioPanel[open]{animation:radioAmpliar .24s ease-out both}
+@keyframes radioAmpliar{from{transform:scale(.72);opacity:.35}to{transform:scale(1);opacity:1}}
+.radioCabecera{display:flex;align-items:center;justify-content:space-between;gap:.4rem;padding:0 0 .45rem .25rem}
+.radioCabecera h2{font:600 1.05rem var(--serif)}
+.radioControl{
+  display:grid;place-items:center;flex:none;width:44px;height:44px;border:1px solid #b78451;
+  border-radius:50%;background:#38251b;color:#ffe5bb;font:1.45rem/1 var(--serif);
+}
+.radioMarco{padding:5px;border:1px solid #c2965d;border-radius:.85rem;background:#181411}
+.radioMarco iframe{display:block;width:100%;border:0;border-radius:.55rem}
+#radioPanel::after{
+  content:"";display:block;width:34%;height:.28rem;margin:.55rem auto 0;border-radius:1em;
+  background:repeating-linear-gradient(90deg,#241711 0 2px,#a26945 2px 4px);
+}
 </style>
 </head>
 <body>
 
 <div id="bienvenida">
-  <h1>Te amo cosi</h1>
-  <form id="acceso" onsubmit="return false">
-    <input id="codigo" type="password" autocomplete="off" autocapitalize="off" aria-label="Código de acceso" placeholder="Código de acceso">
-    <button id="entrar" type="button">Entrar</button>
-  </form>
-  <p id="errorAcceso" role="alert"></p>
+  <div id="etiquetaBienvenida">
+    <h1>Feliz Navidad,<br>te amo cosi</h1>
+    <form id="acceso" onsubmit="return false">
+      <input id="codigo" type="password" autocomplete="off" autocapitalize="off" aria-label="Código de acceso" placeholder="Código de acceso">
+      <button id="entrar" type="button">Entrar</button>
+    </form>
+    <p id="errorAcceso" role="alert"></p>
+  </div>
 </div>
 
 <main id="sala" hidden>
@@ -217,6 +269,9 @@ img{-webkit-user-drag:none;user-select:none;-webkit-user-select:none;-webkit-tou
     <div class="obj" id="o7" data-n="7" aria-label="Chimenea encendida"><i class="brillo"></i><img src="img/obj-7-fuego.png" alt=""></div>
     <div class="obj" id="o8" data-n="8" aria-label="Calcetín navideño"><img src="img/obj-8-calcetin.png" alt=""></div>
     <div class="obj" id="o9" data-n="9" aria-label="Regalo decorativo"><img src="img/obj-9-regalo-decorativo.png" alt=""></div>
+    <button id="radioBoton" type="button" aria-label="Abrir Christmas Radio" aria-haspopup="dialog" aria-controls="radioPanel" aria-expanded="false">
+      <span class="radioCarcasa" aria-hidden="true"><span class="radioPantalla">♫</span></span>
+    </button>
     <button id="pila" type="button" aria-label="Ver los 24 regalos"><img src="img/monton-regalos.png" alt=""></button>
     </div>
    </div>
@@ -224,21 +279,28 @@ img{-webkit-user-drag:none;user-select:none;-webkit-user-select:none;-webkit-tou
   <nav id="navegacion" aria-label="Zonas de la cabaña"><button type="button" data-zona="0" aria-label="Ir al sofá"></button><button type="button" data-zona="1" aria-label="Ir al pino"></button><button type="button" data-zona="2" aria-label="Ir a la chimenea"></button></nav>
 
 
-  <div id="contador" aria-live="off"><span id="contadorTexto">Días para Navidad</span><b id="contadorValor"></b></div>
+  <div id="contador" aria-live="off"><span id="contadorTexto">Días para Navidad</span><b id="contadorValor" role="timer" aria-label="Tiempo para Navidad">
+    <span class="contadorUnidad" aria-hidden="true"><span class="contadorFicha">00</span><small>días</small></span>
+    <span class="contadorUnidad" aria-hidden="true"><span class="contadorFicha">00</span><small>h</small></span>
+    <span class="contadorUnidad" aria-hidden="true"><span class="contadorFicha">00</span><small>min</small></span>
+    <span class="contadorUnidad" aria-hidden="true"><span class="contadorFicha">00</span><small>s</small></span>
+  </b></div>
   <div id="letrero">Lemito se chifló y se robó una cabaña jejeje</div>
   <div id="aviso" role="status"></div>
-  <div id="christmasRadio">
-    <button id="radioBoton" type="button" aria-controls="radioPanel" aria-expanded="false">
-      <span aria-hidden="true">♫</span><span class="radio-etiqueta">Christmas Radio</span>
-    </button>
-    <div id="radioPanel" role="region" aria-label="Reproductor de Christmas Radio" tabindex="0" hidden>
-      <iframe title="Christmas Radio en Spotify"
-        src="https://open.spotify.com/embed/playlist/37i9dQZF1DX0Yxoavh5qJV?utm_source=generator&amp;theme=0&amp;si=9531eb70af984623"
-        width="100%" height="152" loading="lazy" allowfullscreen
-        allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"></iframe>
-    </div>
-  </div>
 </main>
+
+<dialog id="radioPanel" aria-labelledby="radioTitulo">
+  <header class="radioCabecera">
+    <h2 id="radioTitulo">Christmas Radio</h2>
+    <button id="radioCerrar" class="radioControl" type="button" aria-label="Cerrar Christmas Radio" autofocus>×</button>
+  </header>
+  <div class="radioMarco">
+    <iframe title="Christmas Radio en Spotify"
+      src="https://open.spotify.com/embed/playlist/37i9dQZF1DX0Yxoavh5qJV?utm_source=generator&amp;theme=0&amp;si=9531eb70af984623"
+      width="100%" height="152" loading="lazy" allowfullscreen
+      allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"></iframe>
+  </div>
+</dialog>
 
 <section id="zoomRegalos" role="dialog" aria-modal="true" aria-label="Tus regalos"><header id="zoomCabecera"><h2>Espero que te gusten, 1 al día chifis</h2><button id="cerrarZoom" type="button" aria-label="Cerrar regalos">×</button></header><div id="zoomScroll"><div id="regalos" aria-label="Regalos"></div></div></section>
 
@@ -525,12 +587,27 @@ $("veloPolaroid").addEventListener("click", () => $("veloPolaroid").classList.re
 function iniciarContador(){
   $("contadorTexto").textContent = TEXTO_CONTADOR;
   const dos = n => String(n).padStart(2, "0");
+  const contador = $("contadorValor");
+  const fichas = contador.querySelectorAll(".contadorFicha");
+  const reducirMovimiento = matchMedia("(prefers-reduced-motion: reduce)");
   function tic(){
     let s = Math.max(0, Math.floor((NAVIDAD - Date.now()) / 1000));
     const d = Math.floor(s / 86400); s %= 86400;
     const h = Math.floor(s / 3600); s %= 3600;
     const m = Math.floor(s / 60); s %= 60;
-    $("contadorValor").textContent = d + " d " + dos(h) + " h " + dos(m) + " m " + dos(s) + " s";
+    contador.setAttribute("aria-label", d + " días, " + h + " horas, " + m + " minutos y " + s + " segundos");
+    [d, h, m, s].forEach((valor, i) => {
+      const ficha = fichas[i];
+      const siguiente = dos(valor);
+      if(ficha.textContent === siguiente) return;
+      ficha.textContent = siguiente;
+      if(!reducirMovimiento.matches){
+        ficha.animate(
+          [{transform:"perspective(90px) rotateX(-68deg)"}, {transform:"none"}],
+          {duration:230, easing:"ease-out"}
+        );
+      }
+    });
   }
   tic();
   setInterval(tic, 1000);
@@ -545,8 +622,13 @@ iniciar();
   const panel = document.getElementById("radioPanel");
 
   boton.addEventListener("click", () => {
-    panel.hidden = !panel.hidden;
-    boton.setAttribute("aria-expanded", String(!panel.hidden));
+    panel.showModal();
+    boton.setAttribute("aria-expanded", "true");
+  });
+  document.getElementById("radioCerrar").addEventListener("click", () => panel.close());
+  panel.addEventListener("close", () => {
+    boton.setAttribute("aria-expanded", "false");
+    boton.focus({preventScroll:true});
   });
 })();
 </script>
