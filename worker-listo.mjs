@@ -35,6 +35,7 @@ async function leerEstado(env) {
   const estado = raw ? JSON.parse(raw) : {};
   estado.regalos ||= {};
   estado.dias ||= {};
+  estado.fechasApertura ||= {};
   return estado;
 }
 
@@ -65,9 +66,18 @@ export default {
     const abiertos = Object.keys(estado.regalos).length;
     const pendientes = disponibles(dia, abiertos);
 
-    if (ruta === "/estado") {
-      return json({ ok: true, fecha, dia, regalos: estado.regalos, disponibles: pendientes });
+    function estadoPublico() {
+      return {
+        ok: true,
+        fecha,
+        dia,
+        regalos: estado.regalos,
+        fechasApertura: estado.fechasApertura,
+        disponibles: disponibles(dia, Object.keys(estado.regalos).length),
+      };
     }
+
+    if (ruta === "/estado") return json(estadoPublico());
 
     if (ruta === "/abrir") {
       const regalo = Number(body.regalo);
@@ -75,7 +85,7 @@ export default {
         return json({ ok: false, reason: "regalo" }, 400);
       }
       if (estado.regalos[regalo]) {
-        return json({ ok: true, yaAbierto: true, diaApertura: estado.regalos[regalo] });
+        return json({ ok: true, yaAbierto: true, diaApertura: estado.regalos[regalo], estado: estadoPublico() });
       }
       if (dia < 1) return json({ ok: false, reason: "aun_no" });
       if (!pendientes) return json({ ok: false, reason: "limite" });
@@ -86,8 +96,9 @@ export default {
       const turno = abiertos + 1;
       estado.regalos[regalo] = turno;
       estado.dias[turno] = regalo;
+      estado.fechasApertura[regalo] = fecha;
       await env.PROGRESO.put("estado", JSON.stringify(estado));
-      return json({ ok: true, codigo: codigos[turno - 1] });
+      return json({ ok: true, codigo: codigos[turno - 1], estado: estadoPublico() });
     }
 
     return json({ ok: false, reason: "ruta" }, 404);

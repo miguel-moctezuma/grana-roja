@@ -18,11 +18,12 @@
   /* Geometría de la escena: la ilustración (1170×2526) siempre CUBRE la pantalla, sin bandas.
      --vh usa dvh (altura real visible en Safari) y cae a vh en navegadores viejos. */
   --vh:1vh;
-  --ancho-sala:min(100vw, calc(var(--vh) * 62));        /* en celular = ancho completo; en pantalla ancha = columna */
-  --ancho-escena:max(var(--ancho-sala), calc(var(--vh) * 46.32));
+  --ancho-sala:min(100vw, calc(var(--vh) * 207));
+  --ancho-escena:max(calc(var(--ancho-sala) * .36), calc(var(--vh) * 46.32), min(var(--ancho-sala), calc(var(--vh) * 62)));
   --anclaje:70%;                                          /* qué parte del recorte vertical se pierde arriba (techo) */
 }
 @supports (height:100dvh){ :root{ --vh:1dvh } }
+@media (orientation:landscape){ :root{ --anclaje:38% } }
 
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 html,body{height:100%;background:#1b1008;color:var(--crema);font-family:var(--fuente);overflow:hidden;overscroll-behavior:none}
@@ -44,12 +45,11 @@ img{-webkit-user-drag:none;user-select:none;-webkit-user-select:none;-webkit-tou
 #sala[hidden]{display:none}
 
 /* Panorama: tres zonas, desplazamiento horizontal táctil. */
-#panScroll{position:absolute;inset:0;overflow-x:auto;overflow-y:hidden;scroll-snap-type:x mandatory;overscroll-behavior-x:contain;-webkit-overflow-scrolling:touch;scrollbar-width:none;touch-action:pan-x}
+#panScroll{position:absolute;inset:0;overflow-x:auto;overflow-y:hidden;overscroll-behavior-x:contain;-webkit-overflow-scrolling:touch;scrollbar-width:none;touch-action:pan-x}
 #panScroll::-webkit-scrollbar{display:none}
-#panTrack{position:relative;width:calc(var(--ancho-escena) * 3);height:100%;min-width:300%}
+#panTrack{position:relative;width:calc(var(--ancho-escena) * 3);height:100%}
 #escena{position:absolute;left:0;top:var(--anclaje);width:100%;height:calc(var(--ancho-escena) * 2526 / 1170);transform:translateY(calc(var(--anclaje) * -1))}
 #fondo{position:absolute;inset:0;width:100%;height:100%;display:block;pointer-events:none}
-.zona-snap{position:absolute;top:0;bottom:0;width:33.333333%;scroll-snap-align:center;pointer-events:none}
 #navegacion{position:absolute;bottom:calc(env(safe-area-inset-bottom) + 1rem);left:50%;transform:translateX(-50%);display:flex;gap:.7rem;align-items:center;z-index:9;padding:.5rem .7rem;background:rgba(27,16,8,.62);border-radius:2rem;backdrop-filter:blur(6px)}
 #navegacion button{width:44px;height:44px;display:grid;place-items:center;touch-action:manipulation}
 #navegacion button::before{content:"";width:8px;height:8px;border-radius:50%;background:#d9b989;opacity:.55;transition:transform .2s,opacity .2s}
@@ -85,9 +85,9 @@ img{-webkit-user-drag:none;user-select:none;-webkit-user-select:none;-webkit-tou
 .obj{position:absolute;display:none;line-height:0;user-select:none}
 .obj.hay{display:block}
 .obj img{display:block;width:100%;height:auto;pointer-events:none}
-.obj.nuevo{animation:aparece 1.6s ease both}
-.obj.fundir.nuevo{animation:fundir 1.6s ease both}
-@keyframes aparece{from{opacity:0;transform:scale(.6)}to{opacity:1;transform:none}}
+.obj.nuevo{animation:aparece .9s ease both}
+.obj.fundir.nuevo{animation:fundir .9s ease both}
+@keyframes aparece{from{opacity:0;transform:scale(.94)}to{opacity:1;transform:none}}
 @keyframes fundir{from{opacity:0}to{opacity:1}}
 
 #o1{left:0;top:16.4%;width:100%;height:8.3%;pointer-events:none}
@@ -98,7 +98,6 @@ img{-webkit-user-drag:none;user-select:none;-webkit-user-select:none;-webkit-tou
 #o3 img{animation:titila 3.2s ease-in-out infinite}
 @keyframes titila{50%{opacity:.6}}
 #o4,#o5,#o6{left:50%;bottom:34%;width:13%}
-#escena:has(#o6.hay) :is(#o4,#o5){visibility:hidden}
 #o7{left:76.7%;bottom:36.3%;width:6%;transform-origin:50% 100%}
 #o7 img{position:relative;transform-origin:50% 100%;animation:llama 1.7s ease-in-out infinite}
 @keyframes llama{0%,100%{transform:scale(1,1)}35%{transform:scale(.97,1.05)}70%{transform:scale(1.02,.98)}}
@@ -115,9 +114,6 @@ img{-webkit-user-drag:none;user-select:none;-webkit-user-select:none;-webkit-tou
 #contador b{margin-top:.15rem;font-size:.95rem;font-weight:600;color:var(--dorado);font-variant-numeric:tabular-nums}
 
 /* ---------- Letrero ---------- */
-#letrero{position:absolute;left:50%;top:44%;transform:translateX(-50%);max-width:82%;padding:.9rem 1.3rem;border-radius:1.2rem;background:rgba(246,234,210,.88);color:var(--nogal);text-align:center;font-weight:600;font-size:1.05rem;box-shadow:0 .3rem 1.2rem rgba(0,0,0,.3);opacity:0;pointer-events:none;z-index:10}
-#letrero{transition:opacity .25s ease}
-#letrero.ver{opacity:1}
 
 /* ---------- Santa (cruza la ventana el 1 de diciembre) ---------- */
 #santa{position:absolute;left:0;top:0;width:70%;display:none;line-height:0}
@@ -322,6 +318,28 @@ img{-webkit-user-drag:none;user-select:none;-webkit-user-select:none;-webkit-tou
 @media(orientation:landscape) and (min-width:600px) and (max-height:500px){
   #vistaPrevia{left:max(1rem,env(safe-area-inset-left));bottom:max(.75rem,env(safe-area-inset-bottom));transform:none;width:min(28vw,22rem)}
 }
+#panScroll.bloqueado{overflow-x:hidden;touch-action:none}
+#narrador{position:absolute;z-index:12;left:50%;transform:translateX(-50%);
+  bottom:calc(env(safe-area-inset-bottom) + 4.8rem);width:min(46rem,calc(100% - 1rem));
+  container-type:inline-size;pointer-events:none}
+#dialogo{position:relative;display:block;width:100%;text-align:left;pointer-events:auto;border-radius:.7rem}
+#dialogo img{display:block;width:100%;height:auto}
+.nombreNarrador,#textoDialogo{position:absolute;display:grid;align-items:center;font-weight:700}
+.nombreNarrador{left:29%;width:21%;top:36%;height:13%;text-align:center;color:white;
+  font-size:.75rem;font-size:clamp(.68rem,3cqw,1.3rem);line-height:1;white-space:nowrap}
+#textoDialogo{left:28%;right:9%;top:51%;height:34%;color:#462619;
+  font-size:.9rem;font-size:clamp(.83rem,4cqw,1.48rem);line-height:1.12}
+.soloLectores{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+#repetirIntro{min-height:44px;padding:0 .35rem;text-decoration:underline}
+#sala.intro #navegacion{visibility:hidden}
+#sala.intro #narrador{bottom:calc(env(safe-area-inset-bottom) + .7rem)}
+body:has(#sala.intro) #vistaPrevia{visibility:hidden}
+@media(orientation:landscape) and (max-height:500px){
+  #narrador{width:min(29rem,65vw);bottom:calc(env(safe-area-inset-bottom) + 4.5rem)}
+}
+@media(prefers-reduced-motion:reduce){
+  #santa.vuela{animation:none;transform:translate(23%,60%)}
+}
 </style>
 </head>
 <body>
@@ -340,13 +358,12 @@ img{-webkit-user-drag:none;user-select:none;-webkit-user-select:none;-webkit-tou
 <main id="sala" hidden>
   <div id="panScroll" aria-label="Recorrer la cabaña horizontalmente">
    <div id="panTrack">
-    <div class="zona-snap" style="left:0"></div><div class="zona-snap" style="left:33.333333%"></div><div class="zona-snap" style="left:66.666667%"></div>
     <div id="escena">
     <img id="fondo" src="img/panorama-fondo.jpg" alt="" decoding="async">
 
     <div id="ventana"><div class="nieve"></div><div id="santa"><img src="img/santa.png" alt=""></div></div>
 
-    <!-- Nueve objetos, uno por día del 21 al 29 de nov. -->
+    <!-- Decoraciones en el orden de la introducción -->
     <div class="obj fundir" id="o1" data-n="1" aria-label="Guirnalda"><img src="img/obj-1-guirnalda.png" alt=""><img src="img/obj-1-guirnalda.png" alt=""><img src="img/obj-1-guirnalda.png" alt=""></div>
     <div class="obj" id="o2" data-n="2" aria-label="Corona navideña"><img src="img/obj-2-corona.png" alt=""></div>
     <div class="obj fundir" id="o3" data-n="3" aria-label="Luces cálidas"><img src="img/Warm%20Glowing%20Bulb%20Garland.png" alt=""></div>
@@ -373,13 +390,21 @@ img{-webkit-user-drag:none;user-select:none;-webkit-user-select:none;-webkit-tou
     <span class="contadorUnidad" aria-hidden="true"><span class="contadorFicha">00</span><small>s</small></span>
   </b>
   </div>
-  <div id="letrero">Lemito se chifló y se robó una cabaña jejeje</div>
+  <div id="narrador" hidden>
+    <button id="dialogo" type="button" aria-label="Avanzar diálogo de Lemito-zumi">
+      <img src="img/lemito-zumi.png" width="2172" height="724" alt="">
+      <span class="nombreNarrador" aria-hidden="true">Lemito-zumi</span>
+      <span id="textoDialogo" aria-hidden="true"></span>
+    </button>
+  </div>
+  <span id="anuncioDialogo" class="soloLectores" role="status"></span>
   <div id="aviso" role="status"></div>
 </main>
 
 <section id="vistaPrevia" aria-label="Vista de invitado" hidden>
   <header>
     <div><label for="fechaDeslizador">Vista de invitado</label><output id="fechaVistaPrevia" for="fechaDeslizador"></output></div>
+    <button id="repetirIntro" type="button">Ver introducción</button>
     <button id="salirVistaPrevia" type="button">Salir</button>
   </header>
   <input id="fechaDeslizador" type="range" min="0" max="34" value="0">
@@ -435,11 +460,15 @@ const borrar = k => { try{ localStorage.removeItem(k); }catch(e){} };
 const esperar = ms => new Promise(r => setTimeout(r, ms));
 
 let acceso = leer("gr_acceso") || "";
-let estado = null;          // { fecha, dia, regalos:{ idRegalo: diaApertura } }
+let estado = null;          // regalos asigna un turno a cada caja; fechasApertura guarda la fecha real.
 let ocupado = false;
 let vistaInvitado = false;
-let letreroInvitadoMostrado = false;
-let apagarSanta;
+const INTRO_COMPLETA = "gr_intro_completa";
+const SANTA_VISTO = "gr_santa_" + FECHA_SANTA;
+const movimientoReducido = matchMedia("(prefers-reduced-motion: reduce)");
+let introduciendo = false;
+let santaInvitadoVisto = false;
+let vuelo = null;
 
 /* ===== Imágenes: se cargan mientras se ve la bienvenida, para que la sala aparezca completa ===== */
 const COLORES = ["bosque","vino","kraft","marfil"];
@@ -455,7 +484,7 @@ const ESCALA_ABIERTO = {
 const precargar = urls => Promise.all(urls.map(u => new Promise(res => {
   const i = new Image(); i.onload = i.onerror = () => res(); i.src = u;
 })));
-const fondoListo = precargar(["img/panorama-fondo.jpg", "img/monton-regalos.png", "img/piso-zoom.jpg"]);
+const fondoListo = precargar(["img/panorama-fondo.jpg", "img/monton-regalos.png", "img/piso-zoom.jpg", "img/lemito-zumi.png"]);
 const regalosListos = fondoListo.then(() => {
   const l = [];
   COLORES.forEach(c => FORMAS.forEach(f => { l.push("img/regalo-cerrado-"+c+"-"+f.n+".png"); l.push("img/regalo-abierto-"+c+"-"+f.n+".png"); }));
@@ -486,7 +515,7 @@ async function validar(){
     if(!e.ok){ throw new Error(e.reason || "error"); }
     vistaInvitado = e.modo === "invitado";
     if(vistaInvitado){
-      estado = { fecha: INICIO_DECORACION, dia: diasDesde(PRIMER_DIA_REGALOS, INICIO_DECORACION) + 1, regalos: {} };
+      estado = { fecha: INICIO_DECORACION, dia: diasDesde(PRIMER_DIA_REGALOS, INICIO_DECORACION) + 1, regalos: {}, fechasApertura: {} };
       acceso = "";
       $("codigo").value = "";
     }else{
@@ -519,29 +548,148 @@ async function iniciar(){
 }
 
 $("entrar").addEventListener("click", async () => {
+  if($("entrar").disabled) return;
   acceso = $("codigo").value.trim();
   if(!acceso) return;
+  $("entrar").disabled = true;
   if(await validar()){ await sceneLista(); entrarSala(); }
+  else $("entrar").disabled = false;
 });
 $("codigo").addEventListener("keydown", e => { if(e.key === "Enter") $("entrar").click(); });
 
 /* ===== Navegación del panorama ===== */
+function centrarCamara(fraccion, suave=true){
+  const sc = $("panScroll");
+  sc.scrollTo({
+    left: Math.max(0, sc.scrollWidth * fraccion - sc.clientWidth / 2),
+    behavior: suave && !movimientoReducido.matches ? "smooth" : "auto"
+  });
+}
+
 function configurarPanorama(){
   const sc = $("panScroll");
   const botones = Array.from(document.querySelectorAll("#navegacion button"));
-  const paso = () => sc.scrollWidth / 3;
-  const ir = (n, suave=true) => sc.scrollTo({left:Math.max(0, paso()*(n+.5)-sc.clientWidth/2),behavior:suave?"smooth":"instant"});
   const actualizar = () => {
-    const zona = Math.max(0,Math.min(2,Math.round((sc.scrollLeft+sc.clientWidth/2)/paso()-.5)));
+    const recorrido = sc.scrollWidth - sc.clientWidth;
+    const zona = recorrido > 0 ? Math.round(2 * Math.max(0, Math.min(sc.scrollLeft, recorrido)) / recorrido) : 1;
     botones.forEach((b,i)=>{b.classList.toggle("activo",i===zona);b.setAttribute("aria-current",i===zona?"true":"false");});
   };
-  botones.forEach((b,i)=>b.addEventListener("click",()=>ir(i)));
+  botones.forEach((b,i)=>b.addEventListener("click",()=>centrarCamara((i+.5)/3)));
   sc.addEventListener("scroll",actualizar,{passive:true});
-  window.addEventListener("resize",()=>{actualizar();});
-  requestAnimationFrame(()=>{ir(1,false);actualizar();});
+  window.addEventListener("resize",actualizar);
+  actualizar();
 }
 
-/* ===== Sala: etapa según la fecha del servidor ===== */
+/* ===== Lemito-zumi ===== */
+function decir(mensaje){
+  const marco = $("narrador");
+  const boton = $("dialogo");
+  const texto = $("textoDialogo");
+  const anterior = document.activeElement;
+  const letras = Array.from(mensaje);
+  let indice = 0;
+  let escritura;
+  let cerrado = false;
+  let cerrar;
+  const terminado = new Promise(resolve => { cerrar = resolve; });
+
+  function completarTexto(){
+    clearInterval(escritura);
+    indice = letras.length;
+    texto.textContent = mensaje;
+  }
+  function avanzar(){
+    if(indice < letras.length){ completarTexto(); return; }
+    terminar();
+  }
+  function terminar(){
+    if(cerrado) return;
+    cerrado = true;
+    clearInterval(escritura);
+    boton.removeEventListener("click", avanzar);
+    const restaurarFoco = document.activeElement === boton;
+    marco.hidden = true;
+    $("anuncioDialogo").textContent = "";
+    if(restaurarFoco && anterior instanceof HTMLElement) anterior.focus({preventScroll:true});
+    cerrar();
+  }
+
+  texto.textContent = "";
+  marco.hidden = false;
+  $("anuncioDialogo").textContent = "Lemito-zumi. " + mensaje;
+  if(movimientoReducido.matches) completarTexto();
+  else escritura = setInterval(() => {
+    texto.textContent += letras[indice++];
+    if(indice === letras.length) clearInterval(escritura);
+  }, 32);
+  boton.addEventListener("click", avanzar);
+  boton.focus({preventScroll:true});
+  return { terminado, terminar };
+}
+
+function decorar(hasta, animar=false){
+  for(let n=1;n<=9;n++){
+    const objeto = $("o"+n);
+    const etapaPino = n >= 4 && n <= 6;
+    const visible = n <= hasta && (!etapaPino || n === Math.min(hasta,6));
+    objeto.classList.toggle("hay", visible);
+    objeto.classList.toggle("nuevo", visible && animar && n === hasta);
+  }
+}
+
+async function reproducirIntro(demora=0){
+  if(introduciendo || ocupado) return;
+  detenerSanta();
+  introduciendo = true;
+  $("sala").classList.add("intro");
+  $("panScroll").classList.add("bloqueado");
+  $("radioBoton").disabled = true;
+  $("pila").classList.remove("ver");
+  decorar(0);
+  centrarCamara(1/6,false);
+  if(demora) await esperar(demora);
+  await decir("Lemito se chifló y rentó una cabaña jejeje").terminado;
+  await decir("¡Pero hay que decorarla!").terminado;
+
+  const centros = [.50,.796,.358,.565,.565,.565,.797,.79,.25];
+  for(const [i, centro] of centros.entries()){
+    centrarCamara(centro);
+    await esperar(movimientoReducido.matches ? 0 : 570);
+    decorar(i+1,true);
+    await esperar(movimientoReducido.matches ? 140 : 1020);
+  }
+
+  centrarCamara(.565);
+  await decir("Oh no… ¿y los regalos? Santa todavía no llega").terminado;
+  if(!vistaInvitado) guardar(INTRO_COMPLETA,"1");
+  introduciendo = false;
+  $("sala").classList.remove("intro");
+  $("panScroll").classList.remove("bloqueado");
+  $("radioBoton").disabled = false;
+  document.querySelector("#navegacion .activo")?.focus({preventScroll:true});
+  pintarSala();
+}
+
+function detenerSanta(){
+  if(!vuelo) return;
+  clearTimeout(vuelo.temporizador);
+  $("santa").classList.remove("vuela");
+  vuelo.dialogo.terminar();
+  vuelo = null;
+}
+
+function mostrarSanta(){
+  if(vuelo || (vistaInvitado ? santaInvitadoVisto : leer(SANTA_VISTO))) return;
+  centrarCamara(.354,false);
+  const dialogo = decir("¿¡QUIÉN ES ESE???");
+  $("santa").classList.add("vuela");
+  if(vistaInvitado) santaInvitadoVisto = true;
+  else guardar(SANTA_VISTO,"1");
+  const temporizador = setTimeout(detenerSanta,7200);
+  vuelo = { dialogo, temporizador };
+}
+
+/* ===== Sala y vista de invitado ===== */
 function diasDesde(base, fecha){
   return Math.floor((Date.parse(fecha) - Date.parse(base)) / 86400000);
 }
@@ -549,65 +697,53 @@ function diasDesde(base, fecha){
 function entrarSala(){
   $("sala").hidden = false;
   $("bienvenida").classList.add("fuera");
+  $("bienvenida").inert = true;
   configurarPanorama();
-  if(vistaInvitado){
-    $("vistaPrevia").hidden = false;
-    cambiarFechaPrevia();
+  if(vistaInvitado) $("vistaPrevia").hidden = false;
+  iniciarContador();
+  if(vistaInvitado || !leer(INTRO_COMPLETA)){
+    reproducirIntro(movimientoReducido.matches ? 0 : 900);
   }else{
+    centrarCamara(.565,false);
     pintarSala();
   }
-  iniciarContador();
 }
 
 function cambiarFechaPrevia(){
+  if(introduciendo || ocupado) return;
   const control = $("fechaDeslizador");
   const fecha = new Date(Date.parse(INICIO_DECORACION) + Number(control.value) * 86400000).toISOString().slice(0,10);
-  if(fecha < estado.fecha) estado.regalos = {};
+  if(fecha < estado.fecha){
+    estado.regalos = {};
+    estado.fechasApertura = {};
+  }
   estado.fecha = fecha;
   estado.dia = diasDesde(PRIMER_DIA_REGALOS, fecha) + 1;
-  const texto = fechaDeDia(estado.dia);
-  $("fechaVistaPrevia").textContent = texto;
-  control.setAttribute("aria-valuetext", texto);
+  if(fecha !== FECHA_SANTA){
+    santaInvitadoVisto = false;
+    detenerSanta();
+  }
   pintarSala();
 }
 
+function actualizarFechaPrevia(){
+  const texto = fechaDeDia(estado.dia);
+  $("fechaVistaPrevia").textContent = texto;
+  $("fechaDeslizador").setAttribute("aria-valuetext", texto);
+}
+
 $("fechaDeslizador").addEventListener("input", cambiarFechaPrevia);
+$("repetirIntro").addEventListener("click", () => reproducirIntro());
 $("salirVistaPrevia").addEventListener("click", () => location.reload());
 
 function pintarSala(){
-  const f = estado.fecha;
-
-  // Objetos decorativos: 1 por día del 21 al 29 de noviembre; después quedan todos
-  const n = f < INICIO_DECORACION ? 0 : Math.min(9, diasDesde(INICIO_DECORACION, f) + 1);
-  document.querySelectorAll(".obj").forEach(o => {
-    const k = Number(o.dataset.n);
-    o.classList.toggle("hay", k <= n);
-    if(vistaInvitado) return;
-    const visto = leer("gr_obj_" + k);
-    if(k <= n && !visto){ o.classList.add("nuevo"); guardar("gr_obj_" + k, "1"); }
-  });
-
-  // Letrero de la primera visita (una sola vez)
-  if(f >= INICIO_DECORACION && !(vistaInvitado ? letreroInvitadoMostrado : leer("gr_letrero_bienvenida"))){
-    if(vistaInvitado) letreroInvitadoMostrado = true;
-    // Deja que se desvanezca la bienvenida antes de mostrar el letrero.
-    setTimeout(() => {
-      const letrero = $("letrero");
-      letrero.classList.add("ver");
-      if(!vistaInvitado) guardar("gr_letrero_bienvenida", "1");
-      setTimeout(() => letrero.classList.remove("ver"), 6500);
-    }, 950);
-  }
-
-  // Santa: solo el 1 de diciembre
-  const santa = $("santa");
-  clearTimeout(apagarSanta);
-  santa.classList.toggle("vuela", f === FECHA_SANTA);
-  if(f === FECHA_SANTA) apagarSanta = setTimeout(() => santa.classList.remove("vuela"), 7200);
-
-  // Regalos: desde el 2 de diciembre
-  $("pila").classList.toggle("ver", f >= PRIMER_DIA_REGALOS);
-  if(f >= PRIMER_DIA_REGALOS) pintarRegalos();
+  if(introduciendo) return;
+  decorar(9);
+  if(vistaInvitado) actualizarFechaPrevia();
+  if(estado.fecha === FECHA_SANTA) mostrarSanta();
+  const hayRegalos = estado.fecha >= PRIMER_DIA_REGALOS;
+  $("pila").classList.toggle("ver", hayRegalos);
+  if(hayRegalos) pintarRegalos();
 }
 
 /* ===== Regalos ===== */
@@ -636,6 +772,7 @@ function pintarRegalos(){
   for(let i=1;i<=TOTAL;i++){
     const {color,forma} = aspectoRegalo(i);
     const abierto = !!estado.regalos[i];
+    if(abierto && !vistaInvitado && !estado.fechasApertura?.[i]) observarAperturaAnterior(i);
     const b = document.createElement("button");
     b.type = "button";
     b.className = "regalo" + (abierto ? " abierto" : "");
@@ -669,12 +806,15 @@ function fechaDeDia(dia){
 async function tocar(id, boton){
   if(ocupado) return;
   ocupado = true;
+  $("fechaDeslizador").disabled = true;
   try{
-    const diaApertura = estado.regalos[id];
+    const turnoAnterior = estado.regalos[id];
 
     // Regalo ya abierto: Polaroid solo a partir del día siguiente
-    if(diaApertura){
-      if(diaApertura < estado.dia) mostrarPolaroid(diaApertura);
+    if(turnoAnterior){
+      const fechaApertura = estado.fechasApertura?.[id] || observarAperturaAnterior(id);
+      if(fechaApertura < estado.fecha) mostrarPolaroid(turnoAnterior, fechaApertura);
+      else aviso("La Polaroid estará disponible al día siguiente.");
       return;
     }
 
@@ -694,14 +834,15 @@ async function tocar(id, boton){
       $("veloCaja").classList.remove("ver");
       if(vistaInvitado){
         estado.regalos[id] = turno;
+        estado.fechasApertura[id] = estado.fecha;
       }else{
-        estado = await llamar("/estado");
+        estado = r.estado || await llamar("/estado");
       }
       pintarRegalos();
       return;
     }
 
-    if(r.ok && r.yaAbierto){ estado = await llamar("/estado"); pintarRegalos(); return; }
+    if(r.ok && r.yaAbierto){ estado = r.estado || await llamar("/estado"); pintarRegalos(); return; }
 
     // Límite diario, día futuro o cualquier otro rechazo
     boton.classList.add("vibra");
@@ -710,16 +851,26 @@ async function tocar(id, boton){
   }catch(e){
     aviso("Sin conexión. Intenta de nuevo.");
   }finally{
+    $("fechaDeslizador").disabled = false;
     ocupado = false;
   }
 }
 
-function mostrarPolaroid(dia){
+// Las aperturas antiguas solo guardaban el turno. La primera fecha de
+// observación es un límite seguro cuando no existe una fecha registrada.
+function observarAperturaAnterior(id){
+  const clave = "gr_apertura_observada_2026_" + id + "_" + estado.regalos[id];
+  const fecha = leer(clave) || estado.fecha;
+  guardar(clave,fecha);
+  return fecha;
+}
+
+function mostrarPolaroid(turno, fechaApertura){
   const img = $("polaroidImg");
   img.style.visibility = "visible";
   img.onerror = () => { img.style.visibility = "hidden"; };
-  img.src = "fotos/" + dia + ".jpg";   // fotos nombradas por día de apertura: 1.jpg … 24.jpg
-  $("polaroidFecha").textContent = fechaDeDia(dia);
+  img.src = "fotos/" + turno + ".jpg";
+  $("polaroidFecha").textContent = fechaDeDia(diasDesde(PRIMER_DIA_REGALOS, fechaApertura) + 1);
   $("veloPolaroid").classList.add("ver");
 }
 $("veloPolaroid").addEventListener("click", () => $("veloPolaroid").classList.remove("ver"));
