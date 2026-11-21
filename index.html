@@ -392,7 +392,7 @@ body:has(#sala.intro) #vistaPrevia{visibility:hidden}
   </div>
   <div id="narrador" hidden>
     <button id="dialogo" type="button" aria-label="Avanzar diálogo de Lemito-zumi">
-      <img src="img/lemito-zumi.png" width="2172" height="724" alt="">
+      <img id="imagenNarrador" src="img/lemito-zumi.png" width="2172" height="724" alt="">
       <span class="nombreNarrador" aria-hidden="true">Lemito-zumi</span>
       <span id="textoDialogo" aria-hidden="true"></span>
     </button>
@@ -484,7 +484,14 @@ const ESCALA_ABIERTO = {
 const precargar = urls => Promise.all(urls.map(u => new Promise(res => {
   const i = new Image(); i.onload = i.onerror = () => res(); i.src = u;
 })));
-const fondoListo = precargar(["img/panorama-fondo.jpg", "img/monton-regalos.png", "img/piso-zoom.jpg", "img/lemito-zumi.png"]);
+const RETRATOS_LEMITO = {
+  normal: "img/lemito-zumi.png",
+  preocupado: "img/lemito-zumi-preocupado.png",
+  sorprendido: "img/lemito-zumi-sorprendido.png",
+};
+precargar(Object.values(RETRATOS_LEMITO));
+
+const fondoListo = precargar(["img/panorama-fondo.jpg", "img/monton-regalos.png", "img/piso-zoom.jpg"]);
 const regalosListos = fondoListo.then(() => {
   const l = [];
   COLORES.forEach(c => FORMAS.forEach(f => { l.push("img/regalo-cerrado-"+c+"-"+f.n+".png"); l.push("img/regalo-abierto-"+c+"-"+f.n+".png"); }));
@@ -581,7 +588,8 @@ function configurarPanorama(){
 }
 
 /* ===== Lemito-zumi ===== */
-function decir(mensaje){
+function decir(mensaje, expresion="normal"){
+  $("imagenNarrador").src = RETRATOS_LEMITO[expresion];
   const marco = $("narrador");
   const boton = $("dialogo");
   const texto = $("textoDialogo");
@@ -660,7 +668,7 @@ async function reproducirIntro(demora=0){
   }
 
   centrarCamara(.565);
-  await decir("Oh no… ¿y los regalos? Santa todavía no llega").terminado;
+  await decir("Oh no… ¿y los regalos? Santa todavía no llega", "preocupado").terminado;
   if(!vistaInvitado) guardar(INTRO_COMPLETA,"1");
   introduciendo = false;
   $("sala").classList.remove("intro");
@@ -681,7 +689,7 @@ function detenerSanta(){
 function mostrarSanta(){
   if(vuelo || (vistaInvitado ? santaInvitadoVisto : leer(SANTA_VISTO))) return;
   centrarCamara(.354,false);
-  const dialogo = decir("¿¡QUIÉN ES ESE???");
+  const dialogo = decir("¿¡QUIÉN ES ESE???", "sorprendido");
   $("santa").classList.add("vuela");
   if(vistaInvitado) santaInvitadoVisto = true;
   else guardar(SANTA_VISTO,"1");
